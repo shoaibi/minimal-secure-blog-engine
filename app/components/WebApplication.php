@@ -33,7 +33,7 @@ abstract class WebApplication extends Application
 
     protected static function ensureRouteIsProvided()
     {
-        if (empty($_GET['r']))
+        if (empty($_GET[Controller::ROUTE_PARAMETER]))
         {
             static::exitWithException(new \Exception('Bad Request: No route specified', 400));
         }
@@ -41,7 +41,7 @@ abstract class WebApplication extends Application
 
     protected static function parseControllerClassNameAndActionMethodNameFromRequest()
     {
-        list($controller, $action)  = static::parseControllerAndActionFromRequest($_GET['r']);
+        list($controller, $action)  = static::parseControllerAndActionFromRequest($_GET[Controller::ROUTE_PARAMETER]);
         if (!isset($controller, $action))
         {
             static::exitWithException(new \Exception('Bad Request: Missing controller or action', 400));
