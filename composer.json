@@ -1,0 +1,10 @@
+{
+    "autoload": {
+        "psr-4": {
+            "GGS\\Components\\": "app/components",
+            "GGS\\Controllers\\": "app/controllers",
+            "GGS\\Helpers\\": "app/helpers",
+            "GGS\\Models\\": "app/models"
+        }
+    }
+}
