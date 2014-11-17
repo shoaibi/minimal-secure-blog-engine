@@ -109,6 +109,13 @@ abstract class Model extends Object
         return ":${columnName}";
     }
 
+    public function __toString()
+    {
+        $className      = StringUtils::getNameWithoutNamespaces(get_class($this));
+        $pkColumnName   = static::getPkColumnName();
+        return "{$className} #" . $this->$pkColumnName;
+    }
+
     public function delete()
     {
         $pkColumnName   = static::getPkColumnName();

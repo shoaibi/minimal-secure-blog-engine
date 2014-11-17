@@ -56,25 +56,21 @@ class View extends ApplicationComponent
             extract($viewData);
         }
         $path       = static::getPath();
+
         ob_start();
         require_once($path. DIRECTORY_SEPARATOR . $viewName . $this->getExt());
         $content    = ob_get_contents();
         ob_end_clean();
+
         if ($applyLayout)
         {
-            $content = $this->applyLayout($content, $path);
+            $layoutName     = $this->getLayoutName();
+            ob_start();
+            require_once($path . DIRECTORY_SEPARATOR . 'layouts' . DIRECTORY_SEPARATOR . $layoutName . $this->getExt());
+            $content        = ob_get_contents();
+            ob_end_clean();
         }
         echo $content;
-    }
-
-    protected function applyLayout($content, $path)
-    {
-        $layoutName     = $this->getLayoutName();
-        ob_start();
-        require_once($path . DIRECTORY_SEPARATOR . $layoutName . $this->getExt());
-        $wrappedContent = ob_get_contents();
-        ob_end_clean();
-        return $wrappedContent;
     }
 
     protected function getPath()
