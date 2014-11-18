@@ -3,6 +3,8 @@ namespace GGS\Components;
 
 abstract class WebApplication extends Application
 {
+    public static $defaultAction    = 'index';
+
     public static function afterRun(array $config = array())
     {
         static::parseRequestAndInvokeControllerAction();
@@ -41,6 +43,7 @@ abstract class WebApplication extends Application
     protected static function parseControllerClassNameAndActionMethodNameFromRequest()
     {
         list($controller, $action)  = static::parseControllerAndActionFromRequest($_GET[Controller::ROUTE_PARAMETER]);
+        $action                     = (isset($action)) ? $action : static::$defaultAction;
         if (!isset($controller, $action))
         {
             static::exitWithException(new \Exception('Bad Request: Missing controller or action', 400));
@@ -60,5 +63,10 @@ abstract class WebApplication extends Application
         $controller->beforeAction($actionMethodName);
         $controller->$actionMethodName();
         $controller->afterAction($actionMethodName);
+    }
+
+    protected static function resolveDefaultAction()
+    {
+        return 'index';
     }
 }

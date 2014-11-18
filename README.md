@@ -1,29 +1,30 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+## Dependencies ##
+* Webserver, PHP, MySQL, PDO
+* Composer
 
-### What is this repository for? ###
+## How do I get set up? ##
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* Place the code under a web accessible directory
+* cd into project and run:
+```
+composer install
+```
+* Create a new database(and preferably a user too) for the project.
+* Load app/data/ggs.sql into newly created database
+* Visit app at /ggs/index.php?r=post/list
 
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
+## Who do I talk to? ##
 
 * Repo owner or admin
-* Other community or team contact
+* shoaibi@dotgeek.me
+* imshoaibi @ skype
+
+## Things i would have loved to incorporate ##
+* Logging
+* Unit testing
+* Caching posts and comments (memory, or as serialized objects)
+
+## License ##
+Code is provided as is with no liability and terms whatsoever. It may turn your toaster to zombie, it may trigger doomsday device. Try at your own risk.
