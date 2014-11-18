@@ -13,9 +13,9 @@ abstract class Model extends Object
 
     protected $errors;
 
-    public static function getAll()
+    public static function getAll($orderBy = null)
     {
-        return static::getByCriteria(array());
+        return static::getByCriteria(array(), $orderBy);
     }
 
     public static function getByPk($pk)
@@ -24,11 +24,11 @@ abstract class Model extends Object
         return static::getByCriteria($criteria);
     }
 
-    public static function getByCriteria(array $criteria = array())
+    public static function getByCriteria(array $criteria = array(), $orderBy = null)
     {
         $quotedTableName    = static::enquote(static::getTableName());
         $query              = "select * from {$quotedTableName}";
-        $statement          = static::executeQueryByCriteria($query, $criteria);
+        $statement          = static::executeQueryByCriteria($query, $criteria, $orderBy);
         return $statement->fetchAll(\PDO::FETCH_CLASS, get_called_class());
     }
 
@@ -53,14 +53,19 @@ abstract class Model extends Object
         return static::executeQueryByCriteria($query, $criteria);
     }
 
-    protected static function executeQueryByCriteria($query, array $criteria = array())
+    protected static function executeQueryByCriteria($query, array $criteria = array(), $orderBy = null)
     {
+        if (!isset($orderBy))
+        {
+            $orderBy    = static::getDefaultOrderBy();
+        }
         list($whereClauses, $parameters) = static::resolveClausesAndParametersByCriteria($criteria);
         if (!empty($whereClauses))
         {
             $where  = implode(' AND ', $whereClauses);
             $query  .= " where {$where}";
         }
+        $query .= " order by {$orderBy}";
         return static::prepareBindAndExecute($query, $parameters);
     }
 
@@ -115,6 +120,11 @@ abstract class Model extends Object
     protected static function resolveColumnToPlaceholder($columnName)
     {
         return ":${columnName}";
+    }
+
+    protected static function getDefaultOrderBy()
+    {
+        return static::getPkColumnName() . ' desc';
     }
 
     public function rules()

@@ -1,6 +1,6 @@
 <html>
 <head>
-<title><?= \GGS\Components\Application::$name ?> <?= isset($pageTitle)? '|' . $pageTitle : ''; ?></title>
+<title><?= \GGS\Components\Application::$name ?> <?= isset($pageTitle)? '| ' . $pageTitle : ''; ?></title>
 </head>
 <body>
 <div id='content'>
