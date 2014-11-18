@@ -13,9 +13,9 @@ abstract class Model extends Object
 
     protected $errors;
 
-    public static function getAll($orderBy = null)
+    public static function getAll($limit = null, $offset = null, $orderBy = null)
     {
-        return static::getByCriteria(array(), $orderBy);
+        return static::getByCriteria(array(), $limit, $offset, $orderBy);
     }
 
     public static function getByPk($pk)
@@ -24,11 +24,11 @@ abstract class Model extends Object
         return static::getByCriteria($criteria);
     }
 
-    public static function getByCriteria(array $criteria = array(), $orderBy = null)
+    public static function getByCriteria(array $criteria = array(), $limit = null, $offset = null, $orderBy = null)
     {
         $quotedTableName    = static::enquote(static::getTableName());
         $query              = "select * from {$quotedTableName}";
-        $statement          = static::executeQueryByCriteria($query, $criteria, $orderBy);
+        $statement          = static::executeQueryByCriteria($query, $criteria, $limit, $offset, $orderBy);
         return $statement->fetchAll(\PDO::FETCH_CLASS, get_called_class());
     }
 
@@ -53,7 +53,8 @@ abstract class Model extends Object
         return static::executeQueryByCriteria($query, $criteria);
     }
 
-    protected static function executeQueryByCriteria($query, array $criteria = array(), $orderBy = null)
+    protected static function executeQueryByCriteria($query, array $criteria = array(), $limit = null,
+                                                        $offset = null, $orderBy = null)
     {
         if (!isset($orderBy))
         {
@@ -66,6 +67,14 @@ abstract class Model extends Object
             $query  .= " where {$where}";
         }
         $query .= " order by {$orderBy}";
+        if (isset($limit))
+        {
+            $query  .= " limit {$limit}";
+        }
+        if (isset($offset))
+        {
+            $query  .= " offset {$offset}";
+        }
         return static::prepareBindAndExecute($query, $parameters);
     }
 
