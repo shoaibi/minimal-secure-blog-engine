@@ -43,17 +43,17 @@ class View extends ApplicationComponent
         $this->layout   = $layout;
     }
 
-    public function render($viewName, $viewData = array())
+    public function render($viewName, $viewData = array(), $returnOutput = false)
     {
-        $this->renderAndLoadViewFile($viewName, $viewData, true);
+        return $this->renderAndLoadViewFile($viewName, $viewData, true);
     }
 
-    public function renderPartial($viewName, $viewData = array())
+    public function renderPartial($viewName, $viewData = array(), $returnOutput = false)
     {
-        $this->renderAndLoadViewFile($viewName, $viewData, false);
+        return $this->renderAndLoadViewFile($viewName, $viewData, false, $returnOutput);
     }
 
-    protected function renderAndLoadViewFile($viewName, $viewData = array(), $applyLayout = true)
+    protected function renderAndLoadViewFile($viewName, $viewData = array(), $applyLayout = true, $returnOutput = false)
     {
         if(!empty($viewData))
         {
@@ -62,7 +62,7 @@ class View extends ApplicationComponent
         $path       = static::getPath();
 
         ob_start();
-        require_once($path. DIRECTORY_SEPARATOR . $viewName . $this->getExt());
+        require($path. DIRECTORY_SEPARATOR . $viewName . $this->getExt());
         $content    = ob_get_contents();
         ob_end_clean();
 
@@ -70,9 +70,13 @@ class View extends ApplicationComponent
         {
             $layoutName     = $this->getLayoutName();
             ob_start();
-            require_once($path . DIRECTORY_SEPARATOR . 'layouts' . DIRECTORY_SEPARATOR . $layoutName . $this->getExt());
+            require($path . DIRECTORY_SEPARATOR . 'layouts' . DIRECTORY_SEPARATOR . $layoutName . $this->getExt());
             $content        = ob_get_contents();
             ob_end_clean();
+        }
+        if ($returnOutput)
+        {
+            return $content;
         }
         echo $content;
     }

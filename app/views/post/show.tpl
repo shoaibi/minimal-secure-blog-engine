@@ -15,9 +15,7 @@
         {
             foreach ($comments as $comment)
             {
-                echo '<div class="comment" id="' . $comment->id . '">' .
-                        '<div class="comment-author">' . $comment->name . '</div>' .
-                        '<div class="comment-message">' . $comment->message . '</div></div>';
+                \GGS\Components\Application::$view->renderPartial('comment/_single', compact('comment'));
             }
         }
 ?>
