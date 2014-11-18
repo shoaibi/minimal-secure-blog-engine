@@ -11,8 +11,9 @@
 ```
 composer install
 ```
-* Create a new database(and preferably a user too) for the project.
+* Create a new database(and preferably a user too) for the project
 * Load app/data/ggs.sql into newly created database
+* Edit app/config/main.php to update database credentials
 * Visit app at /ggs/index.php?r=post/list
 
 ## Who do I talk to? ##
