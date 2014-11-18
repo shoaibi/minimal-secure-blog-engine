@@ -2,7 +2,7 @@
 $config = array(
     'name'      => 'GGS BackendTask',
     'debug'     => true,
-    // Application components
+    // WebApplication components
     'components' => array(
         'database' => array(
             'connectionString' => 'mysql:host=localhost;dbname=ggs',

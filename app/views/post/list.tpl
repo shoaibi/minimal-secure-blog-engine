@@ -10,7 +10,7 @@ else
     $summary = true;
     foreach ($posts as $post)
     {
-        \GGS\Components\Application::$view->renderPartial('post/_single', compact('post', 'summary'));
+        \GGS\Components\WebApplication::$view->renderPartial('post/_single', compact('post', 'summary'));
     }
 }
 ?>

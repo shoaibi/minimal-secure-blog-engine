@@ -29,7 +29,7 @@ class Database extends ApplicationComponent
         }
         catch(\PDOException $e)
         {
-            \GGS\Components\Application::exitWithException($e, 'Unable to connect to database');
+            \GGS\Components\WebApplication::exitWithException($e, 'Unable to connect to database');
         }
     }
 

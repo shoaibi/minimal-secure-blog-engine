@@ -3,8 +3,8 @@
 <html lang="en-US">
 <head>
 <meta charset="UTF-8" />
-<title><?= \GGS\Components\Application::$name ?> <?= isset($pageTitle)? '| ' . $pageTitle : ''; ?></title>
-<meta name="description" content="<?= \GGS\Components\Application::$name ?>"/>
+<title><?= \GGS\Components\WebApplication::$name ?> <?= isset($pageTitle)? '| ' . $pageTitle : ''; ?></title>
+<meta name="description" content="<?= \GGS\Components\WebApplication::$name ?>"/>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
 <body>

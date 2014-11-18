@@ -10,6 +10,12 @@ abstract class WebApplication extends Application
         static::parseRequestAndInvokeControllerAction();
     }
 
+    public static function exitWithException(\Exception $e, $message = 'WebApplication encountered an error.')
+    {
+        http_response_code(500);
+        parent::exitWithException($e, $message);
+    }
+
     protected static function parseRequestAndInvokeControllerAction()
     {
         $route  = static::ensureRouteIsProvided();

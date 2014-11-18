@@ -27,4 +27,10 @@ abstract class StringUtils
         }
     }
 
+    public static function stripSlashesRecursive($value)
+    {
+        $value = is_array($value) ? array_map('static::stripSlashesRecursive', $value) : stripslashes($value);
+        return $value;
+    }
+
 }

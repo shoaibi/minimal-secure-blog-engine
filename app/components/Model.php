@@ -1,6 +1,6 @@
 <?php
 namespace GGS\Components;
-use \GGS\Components\Application;
+use \GGS\Components\WebApplication;
 use GGS\Components\Validators\Validator;
 use \GGS\Helpers\StringUtils;
 use \GGS\Helpers\FormUtils;
@@ -115,12 +115,12 @@ abstract class Model extends Object
 
     protected static function enquote($value)
     {
-        return Application::$database->enquote($value);
+        return WebApplication::$database->enquote($value);
     }
 
     protected static function prepare($query)
     {
-        return Application::$database->getConnection()->prepare($query);
+        return WebApplication::$database->getConnection()->prepare($query);
     }
 
     protected static function getTableName()
@@ -287,7 +287,7 @@ abstract class Model extends Object
         $inserted                   = boolval(static::prepareBindAndExecute($query, $parameters));
         if ($inserted)
         {
-            $this->$pkColumnName    = intval(Application::$database->getConnection()->lastInsertId(static::getTableName()));
+            $this->$pkColumnName    = intval(WebApplication::$database->getConnection()->lastInsertId(static::getTableName()));
             return true;
         }
         return false;

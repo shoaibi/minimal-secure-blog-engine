@@ -1,6 +1,6 @@
 <?php
 namespace GGS\Controllers;
-use GGS\Components\Application;
+use GGS\Components\WebApplication;
 use GGS\Components\Controller;
 use GGS\Helpers\FormUtils;
 use GGS\Helpers\StringUtils;
@@ -12,7 +12,7 @@ class Post extends Controller
     {
         $posts      = Models\Post::getAll();
         $pageTitle  = 'Show all posts';
-        Application::$view->render('post/list', compact('posts', 'pageTitle'));
+        WebApplication::$view->render('post/list', compact('posts', 'pageTitle'));
     }
 
     public function actionShow()
@@ -24,7 +24,7 @@ class Post extends Controller
         $commentForm->postId    = $post->id;
         $formName               = StringUtils::getNameWithoutNamespaces(get_class($commentForm));
         $this->handleCommentAddition($commentForm);
-        Application::$view->render('post/show', compact('post', 'comments', 'commentForm', 'formName', 'pageTitle'));
+        WebApplication::$view->render('post/show', compact('post', 'comments', 'commentForm', 'formName', 'pageTitle'));
     }
 
     public function actionCreate()
@@ -56,11 +56,11 @@ class Post extends Controller
                 }
                 else
                 {
-                    static::existWithException('Failed to save Post record.');
+                    static::exitWithException('Failed to save Post record.');
                 }
             }
         }
-        Application::$view->render('post/create', compact('model', 'formName', 'pageTitle'));
+        WebApplication::$view->render('post/create', compact('model', 'formName', 'pageTitle'));
     }
 
     protected function handleCommentAddition(\GGS\Models\Comment $commentForm)

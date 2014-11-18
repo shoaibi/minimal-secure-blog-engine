@@ -6,6 +6,7 @@ $action = (!empty($action))? $action : null;
 <div class="form">
     <form id="<?= $formName ?>" name="<?= $formName ?>" action="<?= $action ?>" method="post">
         <?php
+        echo \GGS\Helpers\FormUtils::renderSpamCheckInput();
         foreach ($attributeToInputTypeMapping as $attribute => $inputType)
         {
         echo \GGS\Helpers\FormUtils::renderInput($model, $formName, $attribute, $inputType);

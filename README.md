@@ -1,7 +1,7 @@
 # README #
 
 ## Dependencies ##
-* Webserver, PHP, MySQL, PDO
+* Webserver, PHP(5.4+), MySQL, PDO
 * Composer
 
 ## How do I get set up? ##

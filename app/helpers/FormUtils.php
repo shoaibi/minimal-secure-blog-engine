@@ -3,6 +3,8 @@ namespace GGS\Helpers;
 
 abstract class FormUtils
 {
+    const SPAM_CHECK_INPUT_NAME     = 'check';
+
     public static function resolveInputId($formName, $attribute)
     {
         return "{$formName}_{$attribute}";
@@ -34,7 +36,8 @@ abstract class FormUtils
         }
     }
 
-    public static function renderInput(\GGS\Components\Model $model, $formName, $attribute, $inputType, $label = null, $inputDivClass = 'form-input')
+    public static function renderInput(\GGS\Components\Model $model, $formName, $attribute, $inputType,
+                                       $required = true, $visible = true, $label = null, $inputDivClass = 'form-input')
     {
         $inputId            = static::resolveInputId($formName, $attribute);
         $inputName          = static::resolveInputName($formName, $attribute);
@@ -43,18 +46,47 @@ abstract class FormUtils
         $errorMessageStyle  = static::resolveInputErrorMessageStyle($model, $attribute);
         $errorMessage       = static::resolveInputErrorMessage($model, $attribute);
         $label              = (isset($label)) ? $label : $model->resolveAttributeLabel($attribute);
-        $divStyle           = ($inputType === 'hidden') ? 'display:none' : null;
+        $divStyle           = ($inputType === 'hidden' || !$visible) ? 'display:none' : null;
+        $openingTagSuffix   = ($required) ? 'required>' : '>';
+        $content            = static::renderFormInputWithData($inputType, $inputId, $inputName, $inputValue, $label,
+                                                                $errorMessageId, $errorMessageStyle, $errorMessage,
+                                                                $inputDivClass, $divStyle, $openingTagSuffix);
+        return $content;
+    }
 
+    public static function renderSpamCheckInput($inputType = 'text')
+    {
+        $inputName          = static::SPAM_CHECK_INPUT_NAME;
+        $inputId            = $inputName;
+        $inputValue         = null;
+        $errorMessageId     = '_error';
+        $label              = null;
+        $errorMessageStyle  = 'display:none';
+        $errorMessage       = null;
+        $inputDivClass      = 'form_input';
+        $divStyle           = 'display:none';
+        $openingTagSuffix   = '>';
+        $content            = static::renderFormInputWithData($inputType, $inputId, $inputName, $inputValue, $label,
+                                                                $errorMessageId, $errorMessageStyle, $errorMessage,
+                                                                $inputDivClass, $divStyle, $openingTagSuffix);
+        return $content;
 
+    }
+
+    protected static function renderFormInputWithData($inputType, $inputId, $inputName, $inputValue, $label,
+                                                        $errorMessageId, $errorMessageStyle = 'display:none',
+                                                        $errorMessage = null, $inputDivClass = 'form_input',
+                                                        $divStyle = '', $openingTagSuffix = '>')
+    {
         $content            = "<div class='{$inputDivClass}' style='{$divStyle}'>";
         $content            .= "<label for='{$inputId}'>{$label}</label>";
         if (in_array($inputType, array('text', 'password', 'hidden', 'email')))
         {
-            $content        .= "<input type='{$inputType}' name='{$inputName}' id='{$inputId}' value='{$inputValue}' required>";
+            $content        .= "<input type='{$inputType}' name='{$inputName}' id='{$inputId}' value='{$inputValue}' {$openingTagSuffix}";
         }
         else if ($inputType === 'textarea')
         {
-            $content        .= "<{$inputType} rows='4' cols='50' name='{$inputName}' id='{$inputId}' required>{$inputValue}</{$inputType}>";
+            $content        .= "<{$inputType} rows='4' cols='50' name='{$inputName}' id='{$inputId}' {$openingTagSuffix}{$inputValue}</{$inputType}>";
         }
 
         $content            .= "<p class='errorMessage' id='{$errorMessageId}' style='{$errorMessageStyle}'>{$errorMessage}</p>";

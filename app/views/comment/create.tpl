@@ -5,7 +5,7 @@ $attributeToInputTypeMapping    = array(
             'email'     => 'email',
             'message'   => 'textarea'
             );
-\GGS\Components\Application::$view->renderPartial('common/_form', compact('model', 'formName', 'attributeToInputTypeMapping'));
+\GGS\Components\WebApplication::$view->renderPartial('common/_form', compact('model', 'formName', 'attributeToInputTypeMapping'));
 ?>
 
 <script type="text/javascript">
