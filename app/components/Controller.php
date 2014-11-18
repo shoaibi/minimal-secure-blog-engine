@@ -15,4 +15,14 @@ abstract class Controller extends ApplicationComponent
         $currentUrl = strtok($_SERVER['REQUEST_URI'], '?');
         return "{$currentUrl}?" . static::ROUTE_PARAMETER . "={$controller}/{$action}";
     }
+
+    public function beforeAction($action)
+    {
+
+    }
+
+    public function afterAction($action)
+    {
+
+    }
 }

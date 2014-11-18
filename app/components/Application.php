@@ -33,11 +33,20 @@ abstract class Application extends Object
      */
     public static function run(array $config = array())
     {
+        static::beforeRun($config);
+        static::init($config);
+        static::afterRun($config);
+    }
+
+    protected static function init(array $config = array())
+    {
+        static::beforeInit($config);
         static::setDirectProperties($config);
         $componentsConfig   = (isset($config['components']))? $config['components'] : array();
         static::setComponents($componentsConfig);
         ini_set('display_errors', static::$debug);
         static::setErrorReporting();
+        static::afterInit($config);
     }
 
     protected static function setDirectProperties(array $config)
@@ -87,5 +96,25 @@ abstract class Application extends Object
         {
             ini_set('error_reporting', E_ALL & ~E_NOTICE);
         }
+    }
+
+    protected static function beforeInit(array $config = array())
+    {
+
+    }
+
+    protected static function afterInit(array $config = array())
+    {
+
+    }
+
+    protected static function beforeRun(array $config = array())
+    {
+
+    }
+
+    protected static function afterRun(array $config = array())
+    {
+
     }
 }

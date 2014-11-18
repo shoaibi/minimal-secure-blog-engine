@@ -151,6 +151,7 @@ abstract class Model extends Object
 
     public function validate()
     {
+        $this->beforeValidate();
         $validated  = true;
         foreach ($this->rules() as $attribute => $rules)
         {
@@ -172,6 +173,7 @@ abstract class Model extends Object
                 }
             }
         }
+        $this->afterValidate();
         return $validated;
     }
 
@@ -196,8 +198,17 @@ abstract class Model extends Object
 
     public function delete()
     {
+        $this->beforeDelete();
         $pkColumnName   = static::getPkColumnName();
-        return static::deleteByPk($this->$pkColumnName);
+        $deleted        = static::deleteByPk($this->$pkColumnName);
+        $this->afterDelete($deleted);
+        return $deleted;
+    }
+
+    public function isNew()
+    {
+        $pkColumnName   = static::getPkColumnName();
+        return (!isset($this->$pkColumnName));
     }
 
     public function save($validate = true)
@@ -206,12 +217,14 @@ abstract class Model extends Object
         {
             return false;
         }
+        $this->beforeSave();
         $pkColumnName   = static::getPkColumnName();
-        $saved          = (isset($this->$pkColumnName))? $this->update() : $this->create();
+        $saved          = ($this->isNew())? $this->create() : $this->update();
         if (!$saved)
         {
             throw new \Exception("Unable to save record");
         }
+        $this->afterSave();
         return $this->$pkColumnName;
     }
 
@@ -280,5 +293,35 @@ abstract class Model extends Object
         unset($attributes['errors']);
         unset($attributes[static::getPkColumnName()]);
         return $attributes;
+    }
+
+    protected function beforeValidate()
+    {
+
+    }
+
+    protected function afterValidate()
+    {
+
+    }
+
+    protected function beforeDelete()
+    {
+
+    }
+
+    protected function afterDelete($deleted = true)
+    {
+
+    }
+
+    protected function beforeSave()
+    {
+
+    }
+
+    protected function afterSave()
+    {
+
     }
 }

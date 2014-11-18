@@ -3,9 +3,8 @@ namespace GGS\Components;
 
 abstract class WebApplication extends Application
 {
-    public static function run(array $config = array())
+    public static function afterRun(array $config = array())
     {
-        parent::run($config);
         static::parseRequestAndInvokeControllerAction();
     }
 
@@ -58,6 +57,8 @@ abstract class WebApplication extends Application
         {
             static::exitWithException(new \Exception('Unable to find requested action', 404));
         }
+        $controller->beforeAction($actionMethodName);
         $controller->$actionMethodName();
+        $controller->afterAction($actionMethodName);
     }
 }
