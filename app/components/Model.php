@@ -1,6 +1,7 @@
 <?php
 namespace GGS\Components;
 use \GGS\Components\Application;
+use GGS\Components\Validators\Validator;
 use \GGS\Helpers\StringUtils;
 
 abstract class Model extends Object
@@ -9,6 +10,8 @@ abstract class Model extends Object
      * @var int
      */
     public $id;
+
+    protected $errors;
 
     public static function getAll()
     {
@@ -27,6 +30,11 @@ abstract class Model extends Object
         $query              = "select * from {$quotedTableName}";
         $statement          = static::executeQueryByCriteria($query, $criteria);
         return $statement->fetchAll(\PDO::FETCH_CLASS, get_called_class());
+    }
+
+    public static function exists(array $criteria = array())
+    {
+        return (static::getCountByCriteria($criteria) > 0);
     }
 
     public static function getCountByCriteria(array $criteria = array())
@@ -109,6 +117,76 @@ abstract class Model extends Object
         return ":${columnName}";
     }
 
+    public function rules()
+    {
+        $validators      = array(
+            'id' => array(
+                                array('sanitize'),
+                                array('type', array('type' => 'integer', 'allowEmpty' => true)),
+                                array('value', array('max' => 4294967295, 'allowEmpty' => true)),
+            )
+        );
+        return $validators;
+    }
+
+    public function hasError($attribute)
+    {
+        return isset($this->errors[$attribute]);
+    }
+
+    public function setError($attribute, $message)
+    {
+        $this->errors[$attribute]   = $message;
+    }
+
+    public function getError($attribute)
+    {
+        return $this->errors[$attribute];
+    }
+
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    public function validate()
+    {
+        $validated  = true;
+        foreach ($this->rules() as $attribute => $rules)
+        {
+            foreach ($rules as $rule)
+            {
+                $validatorClassName = Validator::resolveClassNameByType($rule[0]);
+                $validator          = new $validatorClassName();
+                if (isset($rule[1]))
+                {
+                    foreach ($rule[1] as $validatorAttribute => $value)
+                    {
+                        $validator->{$validatorAttribute} = $value;
+                    }
+                }
+                if (!$validator->validate($this, $attribute))
+                {
+                    $validated = false;
+                    break;
+                }
+            }
+        }
+        return $validated;
+    }
+
+    public function setAttributes(array $source)
+    {
+        $savableAttributeKeys    = array_keys(static::getSavableAttributes());
+        foreach ($savableAttributeKeys as $key)
+        {
+            if (isset($source[$key]))
+            {
+                $this->$key     = $source[$key];
+            }
+        }
+    }
+
     public function __toString()
     {
         $className      = StringUtils::getNameWithoutNamespaces(get_class($this));
@@ -122,8 +200,12 @@ abstract class Model extends Object
         return static::deleteByPk($this->$pkColumnName);
     }
 
-    public function save()
+    public function save($validate = true)
     {
+        if ($validate && !$this->validate())
+        {
+            return false;
+        }
         $pkColumnName   = static::getPkColumnName();
         $saved          = (isset($this->$pkColumnName))? $this->update() : $this->create();
         if (!$saved)
@@ -136,8 +218,8 @@ abstract class Model extends Object
     protected function create()
     {
         $pkColumnName               = static::getPkColumnName();
-        $properties                 = static::getSavableData();
-        list($query, $parameters)   = static::resolveInsertQueryAndParametersByProperties($properties);
+        $attributes                 = static::getSavableAttributes();
+        list($query, $parameters)   = static::resolveInsertQueryAndParametersByAttributes($attributes);
         $inserted                   = boolval(static::prepareBindAndExecute($query, $parameters));
         if ($inserted)
         {
@@ -149,18 +231,18 @@ abstract class Model extends Object
 
     protected function update()
     {
-        $properties                 = static::getSavableData();
-        list($query, $parameters)   = static::resolveUpdateQueryAndParametersByProperties($properties);
+        $attributes                 = static::getSavableAttributes();
+        list($query, $parameters)   = static::resolveUpdateQueryAndParametersByAttributes($attributes);
         return boolval(static::prepareBindAndExecute($query, $parameters));
     }
 
-    protected function resolveInsertQueryAndParametersByProperties(array $properties)
+    protected function resolveInsertQueryAndParametersByAttributes(array $attributes)
     {
         $quotedTableName    = static::enquote(static::getTableName());
         $query              = "insert into {$quotedTableName}(columnNames) values (columnData);";
-        $columnNames        = array(); // not using array_keys($properties) to ensure quoted column names;
+        $columnNames        = array(); // not using array_keys($attributes) to ensure quoted column names;
         $parameters         = array(); // not using raw values in query, instead binding them.
-        foreach ($properties as $columnName => $value)
+        foreach ($attributes as $columnName => $value)
         {
             $placeholder                = static::resolveColumnToPlaceholder($columnName);
             $columnNames[]              = static::enquote($columnName);
@@ -172,7 +254,7 @@ abstract class Model extends Object
         return array($query, $parameters);
     }
 
-    protected function resolveUpdateQueryAndParametersByProperties(array $properties)
+    protected function resolveUpdateQueryAndParametersByAttributes(array $attributes)
     {
         $pkColumnName           = static::getPkColumnName();
         $quotedPkColumnName     = static::enquote($pkColumnName);
@@ -181,7 +263,7 @@ abstract class Model extends Object
         $query                  = "UPDATE {$quotedTableName} SET updatesList where {$quotedPkColumnName} = ${pkColumnPlaceholder}";
         $parameters             = array($pkColumnPlaceholder    => $this->$pkColumnName);
         $updatesList            = array();
-        foreach ($properties as $columnName => $value)
+        foreach ($attributes as $columnName => $value)
         {
             $placeholder                = static::resolveColumnToPlaceholder($columnName);
             $updatesList[]              = static::enquote($columnName) . " = " . $placeholder;
@@ -192,10 +274,11 @@ abstract class Model extends Object
         return array($query, $parameters);
     }
 
-    protected function getSavableData()
+    protected function getSavableAttributes()
     {
-        $properties         = get_object_vars($this);
-        unset($properties[static::getPkColumnName()]);
-        return $properties;
+        $attributes = get_object_vars($this);
+        unset($attributes['errors']);
+        unset($attributes[static::getPkColumnName()]);
+        return $attributes;
     }
 }

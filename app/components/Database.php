@@ -42,7 +42,11 @@ class Database extends ApplicationComponent
     {
         if (!isset(static::$instance))
         {
-            static::$instance   = new static($config['connectionString'], $config['username'], $config['password']);
+            $connectionString   = null;
+            $username           = null;
+            $password           = null;
+            extract($config);
+            static::$instance   = new static($connectionString, $username, $password);
         }
         return static::$instance;
     }

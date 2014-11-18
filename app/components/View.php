@@ -27,12 +27,16 @@ class View extends ApplicationComponent
     {
         if (!isset(static::$instance))
         {
-            static::$instance   = new static($config['path'], $config['ext'], $config['layout']);
+            $path   = null;
+            $ext    = null;
+            $layout = null;
+            extract($config);
+            static::$instance   = new static($path, $ext, $layout);
         }
         return static::$instance;
     }
 
-    protected function __construct($path, $ext, $layout)
+    protected function __construct($path = null, $ext = null, $layout = null)
     {
         $this->path     = $path;
         $this->ext      = $ext;

@@ -1,5 +1,4 @@
 <?php
-ini_set('error_reporting', E_ALL & ~E_NOTICE);
 define('ROOT_PATH', __DIR__);
 define('APP_PATH', ROOT_PATH . DIRECTORY_SEPARATOR . 'app');
 define('VENDOR_PATH', ROOT_PATH . DIRECTORY_SEPARATOR . 'vendor');

@@ -2,6 +2,7 @@
     "autoload": {
         "psr-4": {
             "GGS\\Components\\": "app/components",
+            "GGS\\Components\\Validators\\": "app/components/validators",
             "GGS\\Controllers\\": "app/controllers",
             "GGS\\Helpers\\": "app/helpers",
             "GGS\\Models\\": "app/models"
