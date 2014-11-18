@@ -1,9 +1,24 @@
+<div id="posts">
 <?php
 if (empty($posts))
 {
-    echo "No posts found";
+    echo "<p>No posts found</p>";
 }
-foreach ($posts as $post)
+else
 {
-    var_dump(strval($post));
+    foreach ($posts as $post)
+    {
+        echo '<div class="post" id="' . $post->id . '">' .
+                '<div class="post-title">' .
+                    '<a href="' . \GGS\Components\Controller::createUrl('post', 'show', array('id' => $post->id)) . '">' .
+                        $post->title .
+                    '</a>' .
+                '</div>' .
+                '<div class="post-content">' .
+                    \GGS\Helpers\StringUtils::getChoppedStringContent($post->content, 700) .
+                '</div>' .
+            '</div>';
+    }
 }
+?>
+</div>

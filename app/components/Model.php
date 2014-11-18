@@ -13,6 +13,11 @@ abstract class Model extends Object
 
     protected $errors;
 
+    public static function getQualifiedModelClassName($modelClassName)
+    {
+        return '\GGS\Models\\' . $modelClassName;
+    }
+
     public static function getAll($limit = null, $offset = null, $orderBy = null)
     {
         return static::getByCriteria(array(), $limit, $offset, $orderBy);
@@ -20,8 +25,9 @@ abstract class Model extends Object
 
     public static function getByPk($pk)
     {
-        $criteria = array(static::getPkColumnName() => $pk);
-        return static::getByCriteria($criteria);
+        $criteria   = array(static::getPkColumnName() => $pk);
+        $results    = static::getByCriteria($criteria);
+        return (isset($results[0]))? $results[0] : null;
     }
 
     public static function getByCriteria(array $criteria = array(), $limit = null, $offset = null, $orderBy = null)

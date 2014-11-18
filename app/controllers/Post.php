@@ -12,4 +12,13 @@ class Post extends Controller
         $pageTitle  = 'Show all posts';
         Application::$view->render('post/list', compact('posts', 'pageTitle'));
     }
+
+    public function actionShow()
+    {
+        $post           = static::getModelByRequest('Post');
+        $pageTitle      = $post->title;
+        $comments       = Models\Comment::getByCriteria(array('postId' => $post->id));
+        $commentForm    = new Models\Comment();
+        Application::$view->render('post/show', compact('post', 'comments', 'commentForm', 'pageTitle'));
+    }
 }

@@ -13,17 +13,12 @@ class ReferencedFieldValidator extends AllowEmptyValidator
         {
             return true;
         }
-        $qualifiedModelClassName    = $this->getQualifiedModelClassName();
+        $qualifiedModelClassName    = \GGS\Components\Model::getQualifiedModelClassName($this->modelClass);
         $exists = $qualifiedModelClassName::exists(array($attribute => $object->$attribute));
         if (!$exists)
         {
             $this->setError($object, $attribute, 'referenced record can not be found');
         }
         return $exists;
-    }
-
-    protected function getQualifiedModelClassName()
-    {
-        return '\GGS\Models\\' . $this->modelClass;
     }
 }
