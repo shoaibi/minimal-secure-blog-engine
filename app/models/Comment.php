@@ -38,14 +38,14 @@ class Comment extends Model
                                 array('required'),
                                 array('sanitize'),
                                 array('type', array('type' => 'string')),
-                                array('length', array('max' => 50)),
+                                array('length', array('min' => 5, 'max' => 50)),
             ),
 
             'email' => array(
                                 array('required'),
                                 array('sanitize'),
                                 array('type', array('type' => 'string')),
-                                array('length', array('max' => 50)),
+                                array('length', array('min' => 5, 'max' => 50)),
                                 array('email', array('allowEmpty' => true)),
             ),
 
@@ -53,14 +53,14 @@ class Comment extends Model
                                 array('required'),
                                 array('sanitize', array('allowedTags' => '<a>')),
                                 array('type', array('type' => 'string')),
-                                array('length', array('max' => pow(2, 16))),
+                                array('length', array('min' => 5, 'max' => pow(2, 16))),
             ),
 
             'postId' => array(
                                 array('required'),
                                 array('sanitize'),
                                 array('type', array('type' => 'integer')),
-                                array('value', array('max' => 4294967295)),
+                                array('value', array('min' => 1, 'max' => 4294967295)),
                                 array('referencedField', array('modelClass' => 'Post', 'attribute' => 'id')),
             ),
         );
@@ -68,4 +68,5 @@ class Comment extends Model
         $validators         = array_merge($parentValidators, $ownValidators);
         return $validators;
     }
+
 }

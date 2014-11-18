@@ -3,6 +3,7 @@ namespace GGS\Components;
 use \GGS\Components\Application;
 use GGS\Components\Validators\Validator;
 use \GGS\Helpers\StringUtils;
+use \GGS\Helpers\FormUtils;
 
 abstract class Model extends Object
 {
@@ -142,6 +143,19 @@ abstract class Model extends Object
         return static::getPkColumnName() . ' desc';
     }
 
+    public function resolveAttributeLabel($attribute)
+    {
+        $labels = $this->attributeLabels();
+        $label  = (isset($labels[$attribute]))? $labels[$attribute] : ucfirst($attribute);
+        return $label;
+    }
+
+    public function attributeLabels()
+    {
+        // attribute => label
+        return array('id' => 'ID');
+    }
+
     public function rules()
     {
         $validators      = array(
@@ -172,6 +186,18 @@ abstract class Model extends Object
     public function getErrors()
     {
         return $this->errors;
+    }
+
+    public function getQualifiedErrorMessageWithInputIds()
+    {
+        $formName               = StringUtils::getNameWithoutNamespaces(get_class($this));
+        $qualifiedErrorMessages = array();
+        foreach ($this->getErrors() as $attribute => $error)
+        {
+            $inputId                            = FormUtils::resolveInputId($formName, $attribute);
+            $qualifiedErrorMessages[$inputId]   = $error;
+        }
+        return $qualifiedErrorMessages;
     }
 
     public function validate()
@@ -233,7 +259,7 @@ abstract class Model extends Object
     public function isNew()
     {
         $pkColumnName   = static::getPkColumnName();
-        return (!isset($this->$pkColumnName));
+        return (empty($this->$pkColumnName));
     }
 
     public function save($validate = true)

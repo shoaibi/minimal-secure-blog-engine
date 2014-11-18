@@ -1,7 +1,7 @@
 <?php
 namespace GGS\Helpers;
 
-class ArrayUtils
+abstract class ArrayUtils
 {
     public static function getAllNonNestedValues(array $source)
     {

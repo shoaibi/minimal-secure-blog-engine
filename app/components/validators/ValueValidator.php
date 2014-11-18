@@ -9,9 +9,9 @@ class ValueValidator extends AllowEmptyValidator
 
     public function validate(\GGS\Components\Model & $object, $attribute)
     {
-        if (parent::validate($object, $attribute))
+        if (!parent::validate($object, $attribute))
         {
-            return true;
+            return false;
         }
         $valid              = false;
         $errorMessagePrefix = $this->resolveErrorMessagePrefix();
@@ -29,7 +29,7 @@ class ValueValidator extends AllowEmptyValidator
             $valid  = ($comparisonValue > $this->min);
             if (!$valid)
             {
-                $this->setError($object, $attribute, $errorMessagePrefix . 'must be greater than' . $this->min);
+                $this->setError($object, $attribute, $errorMessagePrefix . 'must be greater than ' . $this->min);
             }
         }
         else if (isset($this->max))
@@ -37,7 +37,7 @@ class ValueValidator extends AllowEmptyValidator
             $valid = ($comparisonValue < $this->max);
             if (!$valid)
             {
-                $this->setError($object, $attribute, $errorMessagePrefix . 'must be less than' . $this->max);
+                $this->setError($object, $attribute, $errorMessagePrefix . 'must be less than ' . $this->max);
             }
         }
         return $valid;

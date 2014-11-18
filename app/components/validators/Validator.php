@@ -13,6 +13,7 @@ abstract class Validator extends Object
 
     protected function setError(\GGS\Components\Model & $object, $attribute, $message)
     {
-        $object->setError($attribute, ucfirst($attribute) . ' ' . $message);
+        $label      = $object->resolveAttributeLabel($attribute);
+        $object->setError($attribute, $label . ' ' . $message);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 namespace GGS\Helpers;
 
-class StringUtils
+abstract class StringUtils
 {
     public static function getNameWithoutNamespaces($name)
     {

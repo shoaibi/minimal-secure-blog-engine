@@ -7,7 +7,7 @@ class AllowEmptyValidator extends Validator
 
     public function validate(\GGS\Components\Model & $object, $attribute)
     {
-        if ($this->allowEmpty && empty($object->$attribute))
+        if (!empty($object->$attribute) || ($this->allowEmpty && empty($object->$attribute)))
         {
             return true;
         }

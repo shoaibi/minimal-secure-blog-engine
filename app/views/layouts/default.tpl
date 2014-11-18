@@ -5,6 +5,7 @@
 <meta charset="UTF-8" />
 <title><?= \GGS\Components\Application::$name ?> <?= isset($pageTitle)? '| ' . $pageTitle : ''; ?></title>
 <meta name="description" content="<?= \GGS\Components\Application::$name ?>"/>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
 <body>
 <div id="header">

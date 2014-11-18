@@ -12,8 +12,8 @@ abstract class WebApplication extends Application
 
     protected static function parseRequestAndInvokeControllerAction()
     {
-        static::ensureRouteIsProvided();
-        list($controllerClassName, $actionMethodName)   = static::parseControllerClassNameAndActionMethodNameFromRequest();
+        $route  = static::ensureRouteIsProvided();
+        list($controllerClassName, $actionMethodName)   = static::parseControllerClassNameAndActionMethodNameFromRequest($route);
         static::invokeControllerActionIfExists($controllerClassName, $actionMethodName);
     }
 
@@ -34,15 +34,17 @@ abstract class WebApplication extends Application
 
     protected static function ensureRouteIsProvided()
     {
-        if (empty($_GET[Controller::ROUTE_PARAMETER]))
+        $route  = \GGS\Components\Controller::getRouteFromQueryString();
+        if (empty($route))
         {
             static::exitWithException(new \Exception('Bad Request: No route specified', 400));
         }
+        return $route;
     }
 
-    protected static function parseControllerClassNameAndActionMethodNameFromRequest()
+    protected static function parseControllerClassNameAndActionMethodNameFromRequest($route)
     {
-        list($controller, $action)  = static::parseControllerAndActionFromRequest($_GET[Controller::ROUTE_PARAMETER]);
+        list($controller, $action)  = static::parseControllerAndActionFromRequest($route);
         $action                     = (isset($action)) ? $action : static::$defaultAction;
         if (!isset($controller, $action))
         {

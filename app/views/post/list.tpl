@@ -1,4 +1,5 @@
 <div id="posts">
+<h3 class="posts">Posts</h3>
 <?php
 if (empty($posts))
 {
@@ -6,9 +7,10 @@ if (empty($posts))
 }
 else
 {
+    $summary = true;
     foreach ($posts as $post)
     {
-        \GGS\Components\Application::$view->renderPartial('post/_single', compact('post'));
+        \GGS\Components\Application::$view->renderPartial('post/_single', compact('post', 'summary'));
     }
 }
 ?>
