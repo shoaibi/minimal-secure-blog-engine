@@ -10,5 +10,5 @@ else
     {
         \GGS\Components\WebApplication::$view->renderPartial('post/_single', compact('post', 'summary'));
     }
-    echo '<a class="pager" id="next" href="' . \GGS\Components\Controller::createUrl('post', 'list', array('page' => ++$page)).'">Older</a>';
+    echo '<a class="pager" id="next" href="' . \GGS\Components\WebApplication::$request->createUrl('post', 'list', array('page' => ++$page)).'">Older</a>';
 }

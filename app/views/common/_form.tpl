@@ -6,8 +6,8 @@ $action = (!empty($action))? $action : null;
 <div class="form">
     <form id="<?= $formName ?>" name="<?= $formName ?>" action="<?= $action ?>" method="post">
         <?php
-        echo \GGS\Helpers\CsrfUtils::renderCsrfInput($token);
-        echo \GGS\Helpers\FormUtils::renderSpamCheckInput();
+        echo \GGS\Helpers\CsrfUtils::renderInput($token);
+        echo \GGS\Helpers\HoneyPotInputUtils::renderInput();
         foreach ($attributeToInputTypeMapping as $attribute => $inputType)
         {
         echo \GGS\Helpers\FormUtils::renderInput($model, $formName, $attribute, $inputType);

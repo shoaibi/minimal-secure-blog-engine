@@ -1,10 +1,15 @@
 <?php
 namespace GGS\Components;
 
+/**
+ * View component to handle presentation of output
+ * Class View
+ * @package GGS\Components
+ */
 class View extends ApplicationComponent
 {
     /**
-     * @var Database
+     * @var View
      */
     private static $instance;
 
@@ -23,6 +28,9 @@ class View extends ApplicationComponent
      */
     protected $ext      = null;
 
+    /**
+     * @inheritdoc
+     */
     public static function getInstance(array $config)
     {
         if (!isset(static::$instance))
@@ -36,44 +44,75 @@ class View extends ApplicationComponent
         return static::$instance;
     }
 
+    /**
+     * Bootstrap view component
+     * @param null $path
+     * @param null $ext
+     * @param null $layout
+     */
     protected function __construct($path = null, $ext = null, $layout = null)
     {
-        $this->path     = $path;
-        $this->ext      = $ext;
-        $this->layout   = $layout;
+        $this->path     = (isset($path)) ? $path : $this->getDefaultPath();
+        $this->ext      = (isset($ext))? $ext : $this->getDefaultExt();
+        $this->layout   = (isset($layout)) ? $layout : $this->getDefaultLayoutName();
     }
 
+    /**
+     * Render view with its layout provided its name and data
+     * @param $viewName
+     * @param array $viewData
+     * @param bool $returnOutput
+     * @return string
+     */
     public function render($viewName, $viewData = array(), $returnOutput = false)
     {
-        return $this->renderAndLoadViewFile($viewName, $viewData, true);
+        return $this->renderAndLoadViewFile($viewName, $viewData, true, $returnOutput);
     }
 
+    /**
+     * Render view without layout
+     * @param $viewName
+     * @param array $viewData
+     * @param bool $returnOutput
+     * @return string
+     */
     public function renderPartial($viewName, $viewData = array(), $returnOutput = false)
     {
         return $this->renderAndLoadViewFile($viewName, $viewData, false, $returnOutput);
     }
 
+    /**
+     * Render view provided its name and data
+     * @param $viewName
+     * @param array $viewData
+     * @param bool $applyLayout
+     * @param bool $returnOutput
+     * @return string
+     */
     protected function renderAndLoadViewFile($viewName, $viewData = array(), $applyLayout = true, $returnOutput = false)
     {
+        // setup the view variables
         if(!empty($viewData))
         {
             extract($viewData);
         }
-        $path       = static::getPath();
 
+        // render the view itself
         ob_start();
-        require($path. DIRECTORY_SEPARATOR . $viewName . $this->getExt());
+        require($this->path . DIRECTORY_SEPARATOR . $viewName . $this->ext);
         $content    = ob_get_contents();
         ob_end_clean();
 
+        // do we need to apply layout?
         if ($applyLayout)
         {
-            $layoutName     = $this->getLayoutName();
+            // render the layout
             ob_start();
-            require($path . DIRECTORY_SEPARATOR . 'layouts' . DIRECTORY_SEPARATOR . $layoutName . $this->getExt());
+            require($this->path . DIRECTORY_SEPARATOR . 'layouts' . DIRECTORY_SEPARATOR . $this->layout . $this->ext);
             $content        = ob_get_contents();
             ob_end_clean();
         }
+        // shall we echo the output or return it?
         if ($returnOutput)
         {
             return $content;
@@ -81,43 +120,28 @@ class View extends ApplicationComponent
         echo $content;
     }
 
-    protected function getPath()
-    {
-        if (empty($this->path))
-        {
-            $this->path = $this->getDefaultPath();
-        }
-        return $this->path;
-    }
-
+    /**
+     * Get the default path for application views
+     * @return string
+     */
     protected function getDefaultPath()
     {
         return __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'views';
     }
 
-    protected function getLayoutName()
-    {
-        if (empty($this->layout))
-        {
-            $this->layout   = $this->getDefaultLayoutName();
-        }
-        return $this->layout;
-    }
-
+    /**
+     * Get default layout name
+     * @return string
+     */
     protected function getDefaultLayoutName()
     {
         return 'default';
     }
 
-    protected function getExt()
-    {
-        if (empty($this->ext))
-        {
-            $this->ext  = $this->getDefaultExt();
-        }
-        return $this->ext;
-    }
-
+    /**
+     * get default layout extension
+     * @return string
+     */
     protected function getDefaultExt()
     {
         return '.tpl';

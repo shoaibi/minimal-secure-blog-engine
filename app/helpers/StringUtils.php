@@ -1,8 +1,18 @@
 <?php
 namespace GGS\Helpers;
 
+/**
+ * Utility class to handle additional string functionality
+ * Class StringUtils
+ * @package GGS\Helpers
+ */
 abstract class StringUtils
 {
+    /**
+     * Provided a class name, remove the namespace prefix and return the base name
+     * @param $name
+     * @return mixed
+     */
     public static function getNameWithoutNamespaces($name)
     {
         return end(explode('\\', $name));
@@ -27,6 +37,11 @@ abstract class StringUtils
         }
     }
 
+    /**
+     * Strip slashes from provided value
+     * @param $value
+     * @return array|string
+     */
     public static function stripSlashesRecursive($value)
     {
         $value = is_array($value) ? array_map('static::stripSlashesRecursive', $value) : stripslashes($value);
@@ -45,11 +60,14 @@ abstract class StringUtils
         {
             $characterSet = implode(range("A", "Z")) . implode(range("a", "z")) . implode(range("0", "9"));
         }
+        // get the length of character set to set bounds of rand() below
         $characterSetLength = strlen($characterSet);
         $randomString = '';
         for ($i = 0; $i < $length; $i++)
         {
+            // get a random character
             $randomCharacter    = $characterSet[rand(0, $characterSetLength - 1)];
+            // append it to the string
             $randomString       .= $randomCharacter;
         }
         return $randomString;

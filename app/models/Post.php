@@ -2,19 +2,42 @@
 namespace GGS\Models;
 use GGS\Components\Model;
 
+/**
+ * Model class to handle post data
+ * Class Post
+ * @package GGS\Models
+ */
 class Post extends Model
 {
+    /**
+     * Title of the post
+     * @var string
+     */
     public $title;
 
+    /**
+     * Email of the post author
+     * @var string
+     */
     public $email;
 
+    /**
+     * Post content
+     * @var string
+     */
     public $content;
 
+    /**
+     * @inheritdoc
+     */
     public function __toString()
     {
         return parent::__toString() . ' - ' . $this->title;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         $ownValidators      = array(

@@ -9,5 +9,5 @@ else
     {
         \GGS\Components\WebApplication::$view->renderPartial('comment/_single', compact('comment'));
     }
-    echo '<a class="pager" id="next" href="' . \GGS\Components\Controller::createUrl('post', 'comments', array('postId' => $comment->postId, 'page' => ++$page)).'">Older</a>';
+    echo '<a class="pager" id="next" href="' . \GGS\Components\WebApplication::$request->createUrl('post', 'comments', array('postId' => $comment->postId, 'page' => ++$page)).'">Older</a>';
 }

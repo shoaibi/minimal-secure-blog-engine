@@ -10,11 +10,11 @@
 <body>
 <div id="header">
     <div id="logo">
-        <a href="<?= \GGS\Components\Controller::createUrl('post', 'list'); ?>">
+        <a href="<?= \GGS\Components\WebApplication::$request->createUrl('post', 'list'); ?>">
             Home
         </a>
          &nbsp;|&nbsp;
-        <a href="<?= \GGS\Components\Controller::createUrl('post', 'create'); ?>">
+        <a href="<?= \GGS\Components\WebApplication::$request->createUrl('post', 'create'); ?>">
             Add Post
         </a>
     </div>

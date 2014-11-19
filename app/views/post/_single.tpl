@@ -3,11 +3,11 @@
         <?php
             if ($summary)
             {
-                echo '<a href="' . \GGS\Components\Controller::createUrl('post', 'show', array('id' => $post->getPkValue())).'">' . $post->title .'</a>';
+                echo '<a href="' . \GGS\Components\WebApplication::$request->createUrl('post', 'show', array('id' => $post->getPkValue())).'">' . $post->title .'</a>';
             }
             else
             {
-                echo $post->title . ' | <a href="' . \GGS\Components\Controller::createUrl('post', 'edit', array('id' => $post->getPkValue())).'">Edit</a>';
+                echo $post->title . ' | <a href="' . \GGS\Components\WebApplication::$request->createUrl('post', 'edit', array('id' => $post->getPkValue())).'">Edit</a>';
             }
         ?>
     </div>

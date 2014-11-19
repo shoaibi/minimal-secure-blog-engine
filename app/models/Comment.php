@@ -2,35 +2,48 @@
 namespace GGS\Models;
 use GGS\Components\Model;
 
+/**
+ * Model class to deal with post comments
+ * Class Comment
+ * @package GGS\Models
+ */
 class Comment extends Model
 {
-    // validate is string
-    // strip all tags
-    // validate does not exceed 50 characters
-    // validate not empty
+    /**
+     * Name of comment author
+     * @var string
+     */
     public $name;
 
-    // validate is string
-    // strip all tags
-    // validate does not exceed 50 characters
-    // validate not empty
+    /**
+     * Email of comment author
+     * @var string
+     */
     public $email;
 
-    // validate is string
-    // strip all but "a"
-    // validate does not exceed more than text, < 2^16
+    /**
+     * The message commentor left us
+     * @var string
+     */
     public $message;
 
-    // validate is integer or like integer
-    // validate does not exceed 4294967295
-    // validate a post exists by this id
+    /**
+     * Post id this comment belongs to
+     * @var int
+     */
     public $postId;
 
+    /**
+     * @inheritdoc
+     */
     public function __toString()
     {
         return parent::__toString() . ' - ' . $this->name;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         $ownValidators      = array(
@@ -68,5 +81,4 @@ class Comment extends Model
         $validators         = array_merge($parentValidators, $ownValidators);
         return $validators;
     }
-
 }
