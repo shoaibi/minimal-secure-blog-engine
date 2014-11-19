@@ -5,6 +5,10 @@ use GGS\Components\Controller;
 use GGS\Helpers\CsrfHelper;
 use GGS\Models;
 
+/**
+ * Class Post
+ * @package GGS\Controllers
+ */
 class Post extends Controller
 {
     /**
@@ -23,18 +27,24 @@ class Post extends Controller
     {
         $limit          = WebApplication::$request->getQueryStringParameter('limit', static::MAX_RECORDS_PER_PAGE);
         $page           = WebApplication::$request->getQueryStringParameter('page', 1);
+        $renderNextLink = WebApplication::$request->getQueryStringParameter('renderNextLink', true);
+        $minId          = WebApplication::$request->getQueryStringParameter('minId', 0);
+        $criteria       = array(Models\Post::getPkName() => array($minId, '>'));
         $offset         = ($page-1) * $limit;
-        $posts          = Models\Post::getAll($limit, $offset);
+        $models         = Models\Post::getByCriteria($criteria, $limit, $offset);
+        $refreshUrl     = WebApplication::$request->createUrl('post', 'list');
         $pageTitle      = 'Show all posts';
         if (WebApplication::$request->isAjaxRequest())
         {
             // if its ajax, we want to render the view without layout, header and etc
-            WebApplication::$view->renderPartial('post/_list', compact('posts', 'page'));
+            WebApplication::$view->renderPartial('post/_list', compact('models', 'page',
+                                                                        'renderNextLink', 'refreshUrl'));
 
         }
         else
         {
-            WebApplication::$view->render('post/list', compact('posts', 'page', 'pageTitle'));
+            WebApplication::$view->render('post/list', compact('models', 'page', 'pageTitle',
+                                                                'renderNextLink', 'refreshUrl'));
         }
     }
 
@@ -46,20 +56,26 @@ class Post extends Controller
         // this would always start at page =1 for comments
         $page                   = 1;
         // get the model or exit with an exception
-        $post                   = static::getModelByRequest('Post');
+        $model                  = static::getModelByRequest('Post');
+        $postId                 = $model->getPkValue();
         // fancy stuff, huh?
-        $pageTitle              = $post->title;
+        $pageTitle              = $model->title;
         // get the first page of comments
-        $comments               = Models\Comment::getByCriteria(array('postId' => $post->getPkValue()), static::MAX_RECORDS_PER_PAGE);
+        $comments               = Models\Comment::getByCriteria(compact('postId'), static::MAX_RECORDS_PER_PAGE);
         $commentForm            = new Models\Comment();
         // preset the postId
-        $commentForm->postId    = $post->getPkValue();
+        $commentForm->postId    = $postId;
         $formName               = \GGS\Helpers\FormHelper::getName(get_class($commentForm));
         // CSRF, yay!
         $token                  = CsrfHelper::getNewToken(__FUNCTION__);
+        $refreshUrl             = WebApplication::$request->createUrl('post', 'comments');
+        $renderNextLink         = WebApplication::$request->getQueryStringParameter('renderNextLink', true);
         // handle ajax posts to comment form in a separate action, don't bloat this action
         $this->handleCommentAddition($commentForm);
-        WebApplication::$view->render('post/show', compact('post', 'comments', 'page', 'commentForm', 'formName', 'token', 'pageTitle'));
+        WebApplication::$view->render('post/show', compact('model', 'comments', 'page',
+                                                            'commentForm', 'formName',
+                                                            'token', 'pageTitle', 'refreshUrl',
+                                                            'renderNextLink', 'postId'));
     }
 
     /**
@@ -76,17 +92,20 @@ class Post extends Controller
         // $page =1 if not set? hmmm, ok...
         $page           = WebApplication::$request->getQueryStringParameter('page', 1);
         $offset         = ($page-1) * $limit;
-        $comments       = Models\Comment::getByCriteria(array('postId' => $postId), $limit, $offset);
+        $minId          = WebApplication::$request->getQueryStringParameter('minId', 0);
+        $criteria       = array(Models\Comment::getPkName() => array($minId, '>'), 'postId' => $postId);
+        $models         = Models\Comment::getByCriteria($criteria, $limit, $offset);
+        $renderNextLink = WebApplication::$request->getQueryStringParameter('renderNextLink', true);
         if (WebApplication::$request->isAjaxRequest())
         {
             // ajax request? render without layout, header, etc.
-            WebApplication::$view->renderPartial('comment/_list', compact('comments', 'page'));
+            WebApplication::$view->renderPartial('comment/_list', compact('models', 'page', 'postId', 'renderNextLink'));
 
         }
         else
         {
             // not ajax request? WHY?
-            //WebApplication::$view->renderPartial('comment/list', compact('comments', 'page'));
+            //WebApplication::$view->renderPartial('comment/list', compact('models', 'page', 'postId', 'renderNextLink'));
             static::exitWithException(new \Exception('Invalid Request.', 400));
         }
     }

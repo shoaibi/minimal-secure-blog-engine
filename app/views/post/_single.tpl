@@ -1,13 +1,13 @@
-<div class="post" id="<?= $post->getPkValue() ?>">
+<div class="post" id="<?= $model->getPkValue() ?>">
     <div class="post-title">
         <?php
             if ($summary)
             {
-                echo '<a href="' . \GGS\Components\WebApplication::$request->createUrl('post', 'show', array('id' => $post->getPkValue())).'">' . $post->title .'</a>';
+                echo '<a href="' . \GGS\Components\WebApplication::$request->createUrl('post', 'show', array('id' => $model->getPkValue())).'">' . $model->title .'</a>';
             }
             else
             {
-                echo $post->title . ' | <a href="' . \GGS\Components\WebApplication::$request->createUrl('post', 'edit', array('id' => $post->getPkValue())).'">Edit</a>';
+                echo $model->title . ' | <a href="' . \GGS\Components\WebApplication::$request->createUrl('post', 'edit', array('id' => $model->getPkValue())).'">Edit</a>';
             }
         ?>
     </div>
@@ -15,11 +15,11 @@
         <?php
             if ($summary)
             {
-                $content    = \GGS\Helpers\StringHelper::getChoppedStringContent($post->content, 1000);
+                $content    = \GGS\Helpers\StringHelper::getChoppedStringContent($model->content, 1000);
             }
             else
             {
-                $content    = $post->content;
+                $content    = $model->content;
             }
         echo nl2br($content);
         ?>

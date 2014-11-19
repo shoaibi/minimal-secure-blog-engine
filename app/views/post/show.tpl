@@ -1,5 +1,7 @@
 <?php
 $summary = false;
-\GGS\Components\WebApplication::$view->renderPartial('post/_single', compact('post', 'summary'));
+\GGS\Components\WebApplication::$view->renderPartial('post/_single', compact('model', 'summary'));
 \GGS\Components\WebApplication::$view->renderPartial('comment/create', compact('commentForm', 'formName', 'token'));
-\GGS\Components\WebApplication::$view->renderPartial('comment/list', compact('comments', 'page'));
+$listData           = compact('page', 'postId', 'renderNextLink', 'refreshUrl');
+$listData['models'] = $comments;
+\GGS\Components\WebApplication::$view->renderPartial('comment/list', $listData);

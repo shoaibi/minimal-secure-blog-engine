@@ -25,6 +25,15 @@ abstract class Model extends Object
     protected $errors;
 
     /**
+     * Get the name of primary key column
+     * @return string
+     */
+    public static function getPkName()
+    {
+        return 'id';
+    }
+
+    /**
      * Get qualified model class name with namespace
      * @param $modelClassName
      * @return string
@@ -180,9 +189,15 @@ abstract class Model extends Object
         $parameters     = array();
         foreach ($criteria as $key => $value)
         {
+            $operator                   = "=";
+            if (is_array($value))
+            {
+                $operator               = $value[1];
+                $value                  = $value[0];
+            }
             $placeholder                = static::resolveColumnToPlaceholder($key);
             $quotedKey                  = static::enquote($key);
-            $clauses[]                  = "{$quotedKey} = {$placeholder}";
+            $clauses[]                  = "{$quotedKey} {$operator} {$placeholder}";
             $parameters[$placeholder]   = $value;
         }
         return array($clauses, $parameters);
@@ -236,15 +251,6 @@ abstract class Model extends Object
     {
         // by default we have tables in all lower case letters names after the unqualified model classes
         return strtolower(StringHelper::getNameWithoutNamespaces(get_called_class()));
-    }
-
-    /**
-     * Get the name of primary key column
-     * @return string
-     */
-    protected static function getPkName()
-    {
-        return 'id';
     }
 
     /**
