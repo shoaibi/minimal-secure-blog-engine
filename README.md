@@ -15,7 +15,7 @@ For the UI/CSS: I compiled a very minimal style.css
 
 ## Setup ##
 
-* Place the code under a web accessible directory
+* Place the code under a web accessible directory. I am making the assmumption that the directory containing code is called ggs.
 * cd into project and run:
 ```
 composer install
@@ -23,7 +23,7 @@ composer install
 * Create a new database(and preferably a user too) for the project
 * Load app/data/ggs.sql into newly created database
 * Edit app/config/main.php to update database credentials
-* Visit app at /ggs/index.php?r=post/list
+* Visit app at /ggs/index.php?r=post/list  (You may need to replace the /ggs prefix to the path you have hosted code at relative to webroot)
 
 ## Features ##
 * Add, Edit Post
