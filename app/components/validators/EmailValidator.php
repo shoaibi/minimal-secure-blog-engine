@@ -5,9 +5,9 @@ class EmailValidator extends AllowEmptyValidator
 {
     public function validate(\GGS\Components\Model & $object, $attribute)
     {
-        if (!parent::validate($object, $attribute))
+        if (empty($object->$attribute))
         {
-            return false;
+            return parent::validate($object, $attribute);
         }
         $valid  = boolval(filter_var($object->$attribute, FILTER_VALIDATE_EMAIL));
         if (!$valid)

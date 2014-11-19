@@ -1,0 +1,143 @@
+body {
+	font: 14px/21px Helvetica,Arial,sans-serif;
+	color: #444;
+	background-color: #f6f6f7;
+}
+
+h3 {
+    margin: 30px 0px;
+    font-size: 28px;
+}
+
+#header {
+min-height: 100px;
+background-color: #1b354c;
+}
+
+#row {
+margin: 0 auto;
+width: 960px;
+padding-top: 40px;
+}
+
+#header a {
+	font-size: 20px;
+}
+
+a {
+  color: #42c6f3;
+  text-decoration: none;
+}
+
+#content {
+ width: 960px;
+ min-height: 600px;
+ margin: 0px auto;
+}
+
+#no-content, .post {
+	margin-top: 22px;
+	/* margin-bottom: 22px; */
+	padding: 22px;
+	background-color: #ffffff;
+	border: 1px solid #f1f1f1;
+}
+
+.post-title {
+	font-size: 22px;
+	color: #1b354c;
+}
+
+.post-title span a {
+    font-size: 12px;
+}
+
+.post-title a {
+	color: #1b354c;
+}
+
+.post-title a:hover {
+	color: #42c6f3;
+}
+
+.post-content {
+	padding-top: 12px;
+}
+
+label {
+	float: left;
+	text-align: right;
+	margin-right: 15px;
+	width: 100px;
+	padding-top: 5px;
+	font-size: 1.4em;
+}
+
+.form {
+	width: 880px;
+	margin-top: 25px;
+	padding: 42px;
+	background-color: #F6FBFE;
+	border: 1px solid #DDE8ED
+
+}
+
+.form-title {
+	font-size: 26px;
+	padding-bottom: 18px;
+}
+
+.form input, textarea {
+	padding: 5px;
+	width: 471px;
+	font-family: Helvetica, sans-serif;
+	font-size: 1.4em;
+	margin: 0px 0px 10px 0px;
+	border: 2px solid #ccc;
+}
+
+.form textarea {
+	height: 90px;
+}
+
+input[type=submit] {
+  margin-right:250px;
+}
+
+.comment {
+	margin-bottom: 22px;
+	padding: 22px;
+	background-color: #ffffff;
+	color:  #1b354c;
+	border: 1px solid #f1f1f1;
+	border-bottom: 4px solid #555555;
+}
+
+.comment-author {
+	font-size: 18px;
+	color: #1b354c;
+}
+
+.comment-message {
+	font-size: 18px;
+	font-style: italic;
+	color: #555555;
+}
+
+#form-messages {
+    display: none;
+    border: 1px solid;
+    margin: 10px 0px;
+    padding:15px 20px;
+}
+
+.success {
+    color: #4F8A10;
+    background-color: #DFF2BF;
+}
+
+.errorMessage, .error {
+    color: #D8000C;
+    background-color: #FFBABA;
+}
+

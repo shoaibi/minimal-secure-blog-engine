@@ -1,4 +1,3 @@
-<h3 class="posts">Posts</h3>
 <div id="posts">
     <?php
         $listData               = compact('models', 'page', 'renderNextLink');

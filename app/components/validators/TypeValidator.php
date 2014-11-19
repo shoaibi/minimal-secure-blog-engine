@@ -9,9 +9,9 @@ class TypeValidator extends AllowEmptyValidator
 
     public function validate(\GGS\Components\Model & $object, $attribute)
     {
-        if (!parent::validate($object, $attribute))
+        if (empty($object->$attribute))
         {
-            return false;
+            return parent::validate($object, $attribute);
         }
         $valid  = ((!$this->strict && $this->isSameWhenTypeCasted($object->$attribute)) || $this->isExactlySameType($object->$attribute));
         if (!$valid)

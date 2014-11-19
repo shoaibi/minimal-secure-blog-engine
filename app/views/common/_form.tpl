@@ -1,9 +1,14 @@
 <?php
 $action = (!empty($action))? $action : null;
 ?>
-<p id="form-messages">
-</p>
+<div id="form-messages"></div>
 <div class="form">
+    <?php
+        if ($formTitle)
+        {
+            echo "<h3 class='form-title'>{$formTitle}</h3>";
+        }
+    ?>
     <form id="<?= $formName ?>" name="<?= $formName ?>" action="<?= $action ?>" method="post">
         <?php
         echo \GGS\Helpers\CsrfHelper::renderInput($token);

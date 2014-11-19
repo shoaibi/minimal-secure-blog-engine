@@ -97,7 +97,7 @@ abstract class Controller extends ApplicationComponent
         if(strpos($referrer, WebApplication::$request->getBaseUrl(true)) !== 0)
         {
             // nah? Kick the moron out who couldn't even tweak HTTP_REFERER when spoofing forms.
-            static::exitWithEatSpamException();
+            static::exitWithEatSpamException('Invalid Referrer!');
         }
     }
 
@@ -110,7 +110,7 @@ abstract class Controller extends ApplicationComponent
         if ($isHoneyPotFilled)
         {
             // what? it is set? KILL ALL BOTS
-            static::exitWithEatSpamException();
+            static::exitWithEatSpamException('Honey Pot is filled.');
         }
     }
 
@@ -125,17 +125,17 @@ abstract class Controller extends ApplicationComponent
         if (!$isCsrfTokenValid)
         {
             // nope? Come on, not you again.
-            static::exitWithEatSpamException();
+            static::exitWithEatSpamException('CSRF validation Failed');
         }
     }
 
     /**
      * A wrapper to exit application for when spam checks fail
      */
-    protected static function exitWithEatSpamException()
+    protected static function exitWithEatSpamException($message = null)
     {
         // Munch Munch
-        static::exitWithException('Eat Spam!', 400);
+        static::exitWithException($message . PHP_EOL . 'Eat Spam!', 400);
     }
 
     /**

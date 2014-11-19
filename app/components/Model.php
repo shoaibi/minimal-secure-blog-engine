@@ -344,7 +344,7 @@ abstract class Model extends Object
         $validators      = array(
             'id' => array(
                                 array('type', array('type' => 'integer', 'allowEmpty' => true)),
-                                array('value', array('max' => 4294967295, 'allowEmpty' => true)),
+                                array('value', array('min' => 0, 'max' => 4294967295, 'allowEmpty' => true)),
             )
         );
         return $validators;

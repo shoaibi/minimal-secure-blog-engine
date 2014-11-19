@@ -159,7 +159,7 @@ class Request extends ApplicationComponent
         if ($absolute)
         {
             // need to resolve the procotol and hostname prefix
-            $prefix     = static::resolveProtocolAndHostName();
+            $prefix     = static::resolveProtocolHostNameAndPort();
         }
         // get the request uri
         $requestUri     = static::getServerParameter('REQUEST_URI');
@@ -186,8 +186,9 @@ class Request extends ApplicationComponent
      * Resolve current request's protocol and hostname
      * @return string
      */
-    protected function resolveProtocolAndHostName()
+    protected function resolveProtocolHostNameAndPort()
     {
+        $port           = static::getServerParameter('SERVER_PORT');
         $hostName       = static::getServerParameter('HTTP_HOST');
         // preference order: HTTPS, SERVER_PROTOCOL, http
         $https          = static::getServerParameter('HTTPS');
@@ -199,7 +200,12 @@ class Request extends ApplicationComponent
         {
             $serverProtocol = empty($https) ? 'http' : 'https';
         }
-        return "{$serverProtocol}://${hostName}";
+        $urlPrefix  = "{$serverProtocol}://${hostName}";
+        if (!in_array($port, array(80, 443)))
+        {
+            $urlPrefix  = rtrim($urlPrefix, '/') . "{$port}/";
+        }
+        return $urlPrefix;
     }
 
     /**

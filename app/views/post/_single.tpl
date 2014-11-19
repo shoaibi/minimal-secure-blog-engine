@@ -7,7 +7,7 @@
             }
             else
             {
-                echo $model->title . ' | <a href="' . \GGS\Components\WebApplication::$request->createUrl('post', 'edit', array('id' => $model->getPkValue())).'">Edit</a>';
+                echo $model->title . ' <span><a class="edit" href="' . \GGS\Components\WebApplication::$request->createUrl('post', 'edit', array('id' => $model->getPkValue())).'">Edit</a></span>';
             }
         ?>
     </div>

@@ -1,10 +1,19 @@
 # README #
 
+## What is this? ##
+Implementation of Good Game Studios' Backend Task 01.
+
+## How was it done? ##
+For the PHP/MySQL part I brewed a custom MVC character by character myself. It is very minimal and light.
+For the UI/JS: I opted to use JQuery as the purpose of the task was to test backend skills and I didn't want to indulge in
+cross browser JS issues.
+For the UI/CSS: I compiled a very minimal style.css
+
 ## Dependencies ##
-* Webserver, PHP(5.5+), MySQL, PDO
+* Webserver, PHP(5.5+), MySQL, PDO, JQuery v1.4+(bundled)
 * Composer
 
-## How do I get set up? ##
+## Setup ##
 
 * Place the code under a web accessible directory
 * cd into project and run:
@@ -16,18 +25,41 @@ composer install
 * Edit app/config/main.php to update database credentials
 * Visit app at /ggs/index.php?r=post/list
 
-## Who do I talk to? ##
+## Features ##
+* Add, Edit Post
+* Add Comment
+* Pages support infinite scrolling. Scrolling to page's end will load any previous data. This is true for both, posts and comments.
+* Pages support auto-loading the new content(at 10 second interval by default). This is true for both, posts and comments.
+* Security Features:
+** Strict Validation (XSS, SQL Injection, Remote Code Injection, Command Injection)
+** PDO statements with parameter binding (SQL Injection)
+** Checking Referrer for Post Requests (Spoofed Forms)
+** Honey Pot input for forms (Bot submissions)
+** CSRF Protection for forms (Spoofed forms with CSRF)
+** Session isn't used so Session Fixation and Hijacking attacks are avoided.
 
+
+## Missing Features ##
+* Preventing Timing Attacks against CSRF checks(specifically Models\Csrf::isValid())
+* Managing datetimes for posts and comments
+* Dynamic input id for CSRF and Honey Pot field
+* Cron script to cleanup expired CSRF tokens from database
+* Logging
+* Unit Testing
+* Caching
+* Captcha
+* Delete Post
+* Edit Comment
+* Delete Comment
+* Advanced ORM Queries
+* User Management
+* Rights Management
+* Comment and Post Moderation
+
+## Who do I talk to? ##
 * Repo owner or admin
 * shoaibi@dotgeek.me
 * imshoaibi @ skype
-
-## Things i would have loved to incorporate ##
-* Dynamic input id for csrf field
-* Cron script to cleanup csrf past their expirationTime
-* Logging
-* Unit testing
-* Caching posts and comments (memory, or as serialized objects)
 
 ## License ##
 Code is provided as is with no liability and terms whatsoever. It may turn your toaster to zombie, it may trigger doomsday device. Try at your own risk.

@@ -1,11 +1,12 @@
 <?php
-$model  = $commentForm;
+$formTitle  = 'Add Comment';
+$model      = $commentForm;
 $attributeToInputTypeMapping    = array(
             'name'     => 'text',
             'email'     => 'email',
             'message'   => 'textarea'
             );
-\GGS\Components\WebApplication::$view->renderPartial('common/_form', compact('model', 'formName', 'token', 'attributeToInputTypeMapping'));
+\GGS\Components\WebApplication::$view->renderPartial('common/_form', compact('model', 'formName', 'formTitle', 'token', 'attributeToInputTypeMapping'));
 ?>
 
 <script type="text/javascript">
@@ -14,7 +15,6 @@ $attributeToInputTypeMapping    = array(
         var formId      = '<?= $formName ?>';
         var form        = $('#' + formId);
         var formMessages = $('#form-messages');
-        $(formMessages).removeClass();
         $(form).submit(function(event)
         {
             var formData = $(form).serialize();
@@ -26,19 +26,20 @@ $attributeToInputTypeMapping    = array(
                 success : function(data, status, request)
                             {
                                 $('.errorMessage').text('').css('display', 'none');
-                                $(formMessages).addClass(data.status);
-                                $(formMessages).text(data.message);
+                                $(formMessages).removeClass();
+                                $(formMessages).show().addClass(data.status).text(data.message);
 
                                 if (data.status == 'success')
                                 {
                                     //$(form).trigger("reset");
-                                    $(form).parent().html('');
+                                    $(form).parent().hide().html('');
+                                    $(formMessages).fadeOut(1500);
                                 }
                                 if (data.status == 'error' && 'errors' in data)
                                 {
                                     for (var attributeName in data.errors) {
                                         if (data.errors.hasOwnProperty(attributeName)) {
-                                            $('#' + attributeName).siblings('.errorMessage').text(data.errors[attributeName]).css('display', '');
+                                            $('#' + attributeName).siblings('.errorMessage').text(data.errors[attributeName]).show();;
                                         }
                                     }
                                 }

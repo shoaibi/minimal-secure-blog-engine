@@ -11,9 +11,9 @@ class ValueValidator extends AllowEmptyValidator
 
     public function validate(\GGS\Components\Model & $object, $attribute)
     {
-        if (!parent::validate($object, $attribute))
+        if (empty($object->$attribute))
         {
-            return false;
+            return parent::validate($object, $attribute);
         }
         $valid              = false;
         $errorMessagePrefix = $this->resolveErrorMessagePrefix();
@@ -31,7 +31,7 @@ class ValueValidator extends AllowEmptyValidator
             $valid = ($comparisonValue > $this->min && $comparisonValue < $this->max);
             if (!$valid)
             {
-                $this->setError($object, $attribute, $errorMessagePrefix . 'must be between ' . $this->min . ' - '  . $this->max);
+                $this->setError($object, $attribute, $errorMessagePrefix . 'must be between ' . ($this->min + 1). ' - '  . ($this->max -1));
             }
         }
         else if (isset($this->min))

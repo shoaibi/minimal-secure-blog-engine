@@ -73,7 +73,7 @@ class Comment extends Model
                                 array('required'),
                                 array('sanitize'),
                                 array('type', array('type' => 'integer')),
-                                array('value', array('min' => 1, 'max' => 4294967295)),
+                                array('value', array('min' => 0, 'max' => 4294967295)),
                                 array('referencedField', array('modelClass' => 'Post', 'attribute' => 'id')),
             ),
         );

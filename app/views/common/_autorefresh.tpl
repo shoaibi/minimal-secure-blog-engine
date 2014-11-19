@@ -1,7 +1,7 @@
 <?php
-$data                   = (isset($data))? $data : array();
-$data['page']           = 1;
-$data['renderNextLink'] = 0;
+$data                           = (isset($data))? $data : array();
+$data['page']                   = 1;
+$data['renderNextLink']         = 0;
 ?>
 <script type="text/javascript">
     $(function() {
@@ -32,6 +32,6 @@ $data['renderNextLink'] = 0;
                 }
             });
         }
-        var refreshId = setInterval(refreshContent, 5000);
+        var refreshId = setInterval(refreshContent, 10*1000);
     });
 </script>

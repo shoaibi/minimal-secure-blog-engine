@@ -34,7 +34,7 @@ abstract class CsrfHelper
         $csrf->action   = $action;
         if (!$csrf->save(true, false))
         {
-            WebApplication::exitWithException(new \Exception('Unable to generate csrf token'), 400);
+            WebApplication::exitWithException(new \Exception('Unable to generate csrf token', 400));
         }
         return $csrf->key;
     }

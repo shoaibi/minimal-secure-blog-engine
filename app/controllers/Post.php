@@ -25,10 +25,10 @@ class Post extends Controller
      */
     public function actionList()
     {
-        $limit          = WebApplication::$request->getQueryStringParameter('limit', static::MAX_RECORDS_PER_PAGE);
-        $page           = WebApplication::$request->getQueryStringParameter('page', 1);
-        $renderNextLink = WebApplication::$request->getQueryStringParameter('renderNextLink', true);
-        $minId          = WebApplication::$request->getQueryStringParameter('minId', 0);
+        $limit          = static::getLimitFromQueryString();
+        $page           = static::getPageFromQueryString();
+        $renderNextLink = static::getRenderNextLinkFromQueryString();
+        $minId          = static::getMinIdFromQueryString();
         $criteria       = array(Models\Post::getPkName() => array($minId, '>'));
         $offset         = ($page-1) * $limit;
         $models         = Models\Post::getByCriteria($criteria, $limit, $offset);
@@ -69,7 +69,7 @@ class Post extends Controller
         // CSRF, yay!
         $token                  = CsrfHelper::getNewToken(__FUNCTION__);
         $refreshUrl             = WebApplication::$request->createUrl('post', 'comments');
-        $renderNextLink         = WebApplication::$request->getQueryStringParameter('renderNextLink', true);
+        $renderNextLink         = static::getRenderNextLinkFromQueryString();
         // handle ajax posts to comment form in a separate action, don't bloat this action
         $this->handleCommentAddition($commentForm);
         WebApplication::$view->render('post/show', compact('model', 'comments', 'page',
@@ -88,14 +88,14 @@ class Post extends Controller
         {
             static::exitWithException(new \Exception("Invalid post id supplied to load comments of.", 400));
         }
-        $limit          = WebApplication::$request->getQueryStringParameter('limit', static::MAX_RECORDS_PER_PAGE);
-        // $page =1 if not set? hmmm, ok...
-        $page           = WebApplication::$request->getQueryStringParameter('page', 1);
+        $postId         = intval($postId);
+        $limit          = static::getLimitFromQueryString();
+        $page           = static::getPageFromQueryString();
+        $minId          = static::getMinIdFromQueryString();
+        $renderNextLink = static::getRenderNextLinkFromQueryString();
         $offset         = ($page-1) * $limit;
-        $minId          = WebApplication::$request->getQueryStringParameter('minId', 0);
         $criteria       = array(Models\Comment::getPkName() => array($minId, '>'), 'postId' => $postId);
         $models         = Models\Comment::getByCriteria($criteria, $limit, $offset);
-        $renderNextLink = WebApplication::$request->getQueryStringParameter('renderNextLink', true);
         if (WebApplication::$request->isAjaxRequest())
         {
             // ajax request? render without layout, header, etc.
@@ -202,5 +202,25 @@ class Post extends Controller
             echo json_encode($response);
             exit;
         }
+    }
+
+    protected static function getLimitFromQueryString()
+    {
+        return intval(WebApplication::$request->getQueryStringParameter('limit', static::MAX_RECORDS_PER_PAGE));
+    }
+
+    protected static function getPageFromQueryString()
+    {
+        return intval(WebApplication::$request->getQueryStringParameter('page', 1));
+    }
+
+    protected static function getRenderNextLinkFromQueryString()
+    {
+        return boolval(WebApplication::$request->getQueryStringParameter('renderNextLink', true));
+    }
+
+    protected static function getMinIdFromQueryString()
+    {
+        return intval(WebApplication::$request->getQueryStringParameter('minId', 0));
     }
 }
