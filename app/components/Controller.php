@@ -1,8 +1,8 @@
 <?php
 namespace GGS\Components;
-use GGS\Helpers\CsrfUtils;
-use GGS\Helpers\FormUtils;
-use GGS\Helpers\StringUtils;
+use GGS\Helpers\CsrfHelper;
+use GGS\Helpers\FormHelper;
+use GGS\Helpers\StringHelper;
 use GGS\Components\WebApplication;
 
 /**
@@ -80,9 +80,9 @@ abstract class Controller extends ApplicationComponent
             (ini_get('magic_quotes_sybase') && (strtolower(ini_get('magic_quotes_sybase')) != "off")))
         {
             // FANTASTIC. BAD BAD BAD SYSADMIN, NO GIFT FOR YOU ON THE NEXT SYSADMIN DAY
-            StringUtils::stripSlashesRecursive($_GET);
-            StringUtils::stripSlashesRecursive($_POST);
-            StringUtils::stripSlashesRecursive($_COOKIE);
+            StringHelper::stripSlashesRecursive($_GET);
+            StringHelper::stripSlashesRecursive($_POST);
+            StringHelper::stripSlashesRecursive($_COOKIE);
         }
     }
 
@@ -106,7 +106,7 @@ abstract class Controller extends ApplicationComponent
      */
     protected static function ensureHoneyPotFieldIsNotSet()
     {
-        $isHoneyPotFilled   = \GGS\Helpers\HoneyPotInputUtils::isHoneyPotInputFilled();
+        $isHoneyPotFilled   = \GGS\Helpers\HoneyPotInputHelper::isHoneyPotInputFilled();
         if ($isHoneyPotFilled)
         {
             // what? it is set? KILL ALL BOTS
@@ -121,7 +121,7 @@ abstract class Controller extends ApplicationComponent
     protected static function ensureCsrfTokenValidity($action)
     {
         // is the token valid?
-        $isCsrfTokenValid   = CsrfUtils::validateRequest($action);
+        $isCsrfTokenValid   = CsrfHelper::validateRequest($action);
         if (!$isCsrfTokenValid)
         {
             // nope? Come on, not you again.

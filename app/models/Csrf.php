@@ -109,7 +109,7 @@ class Csrf extends Model
      */
     public static function generateRandomKey()
     {
-        return \GGS\Helpers\StringUtils::generateRandomString(static::KEY_LENGTH);
+        return \GGS\Helpers\StringHelper::generateRandomString(static::KEY_LENGTH);
     }
 
     /**

@@ -66,7 +66,7 @@ abstract class Application extends Object
      */
     protected static function setDirectProperties(array $config)
     {
-        $directProperties   = \GGS\Helpers\ArrayUtils::getAllNonNestedValues($config);
+        $directProperties   = \GGS\Helpers\ArrayHelper::getAllNonNestedValues($config);
         foreach ($directProperties as $property => $value)
         {
             static::${$property}        = $value;

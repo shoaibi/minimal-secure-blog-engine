@@ -15,7 +15,7 @@
         <?php
             if ($summary)
             {
-                $content    = \GGS\Helpers\StringUtils::getChoppedStringContent($post->content, 1000);
+                $content    = \GGS\Helpers\StringHelper::getChoppedStringContent($post->content, 1000);
             }
             else
             {

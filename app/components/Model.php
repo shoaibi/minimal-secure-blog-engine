@@ -2,8 +2,8 @@
 namespace GGS\Components;
 use \GGS\Components\WebApplication;
 use GGS\Components\Validators\Validator;
-use \GGS\Helpers\StringUtils;
-use \GGS\Helpers\FormUtils;
+use \GGS\Helpers\StringHelper;
+use \GGS\Helpers\FormHelper;
 
 /**
  * Base class for models
@@ -235,7 +235,7 @@ abstract class Model extends Object
     protected static function getTableName()
     {
         // by default we have tables in all lower case letters names after the unqualified model classes
-        return strtolower(StringUtils::getNameWithoutNamespaces(get_called_class()));
+        return strtolower(StringHelper::getNameWithoutNamespaces(get_called_class()));
     }
 
     /**
@@ -390,12 +390,12 @@ abstract class Model extends Object
     public function getQualifiedErrorMessageWithInputIds()
     {
         // get the form name
-        $formName               = \GGS\Helpers\FormUtils::getName(get_class($this));
+        $formName               = \GGS\Helpers\FormHelper::getName(get_class($this));
         $qualifiedErrorMessages = array();
         foreach ($this->getErrors() as $attribute => $error)
         {
             // qualify the key to be input id
-            $inputId                            = FormUtils::resolveInputId($formName, $attribute);
+            $inputId                            = FormHelper::resolveInputId($formName, $attribute);
             $qualifiedErrorMessages[$inputId]   = $error;
         }
         return $qualifiedErrorMessages;
@@ -462,7 +462,7 @@ abstract class Model extends Object
      */
     public function __toString()
     {
-        $className      = StringUtils::getNameWithoutNamespaces(get_class($this));
+        $className      = StringHelper::getNameWithoutNamespaces(get_class($this));
         return "{$className} #" . $this->getPkValue();
     }
 

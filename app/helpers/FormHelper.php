@@ -3,10 +3,10 @@ namespace GGS\Helpers;
 
 /**
  * Utility class for handling various form functions
- * Class FormUtils
+ * Class FormHelper
  * @package GGS\Helpers
  */
-abstract class FormUtils
+abstract class FormHelper
 {
     /**
      * Resolve a form's name provided the model it represents
@@ -15,7 +15,7 @@ abstract class FormUtils
      */
     public static function getName($modelClass)
     {
-        return StringUtils::getNameWithoutNamespaces($modelClass);
+        return StringHelper::getNameWithoutNamespaces($modelClass);
     }
 
     /**

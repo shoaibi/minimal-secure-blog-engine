@@ -2,7 +2,7 @@
 namespace GGS\Controllers;
 use GGS\Components\WebApplication;
 use GGS\Components\Controller;
-use GGS\Helpers\CsrfUtils;
+use GGS\Helpers\CsrfHelper;
 use GGS\Models;
 
 class Post extends Controller
@@ -54,9 +54,9 @@ class Post extends Controller
         $commentForm            = new Models\Comment();
         // preset the postId
         $commentForm->postId    = $post->getPkValue();
-        $formName               = \GGS\Helpers\FormUtils::getName(get_class($commentForm));
+        $formName               = \GGS\Helpers\FormHelper::getName(get_class($commentForm));
         // CSRF, yay!
-        $token                  = CsrfUtils::getNewToken(__FUNCTION__);
+        $token                  = CsrfHelper::getNewToken(__FUNCTION__);
         // handle ajax posts to comment form in a separate action, don't bloat this action
         $this->handleCommentAddition($commentForm);
         WebApplication::$view->render('post/show', compact('post', 'comments', 'page', 'commentForm', 'formName', 'token', 'pageTitle'));
@@ -98,7 +98,7 @@ class Post extends Controller
     {
         $post           = new Models\Post();
         $pageTitle      = 'Add Post';
-        $token          = CsrfUtils::getNewToken(__FUNCTION__);
+        $token          = CsrfHelper::getNewToken(__FUNCTION__);
         $this->_renderPostEdit($post, $pageTitle, $token);
     }
 
@@ -110,7 +110,7 @@ class Post extends Controller
         $model          = static::getModelByRequest('Post');
         // fancy, right?
         $pageTitle      = 'Edit Post : ' . $model->title;
-        $token          = CsrfUtils::getNewToken(__FUNCTION__);
+        $token          = CsrfHelper::getNewToken(__FUNCTION__);
         $this->_renderPostEdit($model, $pageTitle, $token);
     }
 
@@ -122,7 +122,7 @@ class Post extends Controller
      */
     public function _renderPostEdit(\GGS\Models\Post $model, $pageTitle, $token)
     {
-        $formName       = \GGS\Helpers\FormUtils::getName(get_class($model));
+        $formName       = \GGS\Helpers\FormHelper::getName(get_class($model));
         if (WebApplication::$request->isPostRequest() && $attributes = WebApplication::$request->getPostParameter($formName))
         {
             // set the data from post
@@ -144,7 +144,7 @@ class Post extends Controller
      */
     protected function handleCommentAddition(\GGS\Models\Comment $commentForm)
     {
-        $formName       = \GGS\Helpers\FormUtils::getName(get_class($commentForm));
+        $formName       = \GGS\Helpers\FormHelper::getName(get_class($commentForm));
         // ensure its ajax, ensure its ajax and ensure form is set
         if (WebApplication::$request->isAjaxRequest() && WebApplication::$request->isPostRequest() &&
                 $attributes = WebApplication::$request->getPostParameter($formName))

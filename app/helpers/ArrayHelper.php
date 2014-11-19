@@ -3,10 +3,10 @@ namespace GGS\Helpers;
 
 /**
  * Utility class to handle additional array features
- * Class ArrayUtils
+ * Class ArrayHelper
  * @package GGS\Helpers
  */
-abstract class ArrayUtils
+abstract class ArrayHelper
 {
     /**
      * Strip nested values from an array

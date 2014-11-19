@@ -5,10 +5,10 @@ use GGS\Models\Csrf;
 
 /**
  * Utility class to handle honey pot input functions
- * Class HoneyPotInputUtils
+ * Class HoneyPotInputHelper
  * @package GGS\Helpers
  */
-abstract class HoneyPotInputUtils
+abstract class HoneyPotInputHelper
 {
     /**
      * Name of spam check input field on form
@@ -28,7 +28,7 @@ abstract class HoneyPotInputUtils
      */
     public static function renderInput()
     {
-        return FormUtils::renderAntiSpamInput(static::HONEY_POT_INPUT_NAME, static::HONEY_POT_INPUT_TYPE, null);
+        return FormHelper::renderAntiSpamInput(static::HONEY_POT_INPUT_NAME, static::HONEY_POT_INPUT_TYPE, null);
     }
 
     /**

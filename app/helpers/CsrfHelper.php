@@ -5,10 +5,10 @@ use GGS\Models\Csrf;
 
 /**
  * Utility class to handle CSRF protection
- * Class CsrfUtils
+ * Class CsrfHelper
  * @package GGS\Helpers
  */
-abstract class CsrfUtils
+abstract class CsrfHelper
 {
     /**
      * Name of csrf input field on form
@@ -83,7 +83,7 @@ abstract class CsrfUtils
      */
     public static function renderInput($value)
     {
-        return FormUtils::renderAntiSpamInput(static::CSRF_INPUT_NAME, static::CSRF_INPUT_TYPE, $value);
+        return FormHelper::renderAntiSpamInput(static::CSRF_INPUT_NAME, static::CSRF_INPUT_TYPE, $value);
     }
 }
 ?>

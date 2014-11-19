@@ -3,10 +3,10 @@ namespace GGS\Helpers;
 
 /**
  * Utility class to handle additional string functionality
- * Class StringUtils
+ * Class StringHelper
  * @package GGS\Helpers
  */
-abstract class StringUtils
+abstract class StringHelper
 {
     /**
      * Provided a class name, remove the namespace prefix and return the base name
