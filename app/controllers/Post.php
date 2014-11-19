@@ -11,22 +11,58 @@ class Post extends Controller
 {
     public function actionList()
     {
-        $posts      = Models\Post::getAll();
-        $pageTitle  = 'Show all posts';
-        WebApplication::$view->render('post/list', compact('posts', 'pageTitle'));
+        $limit          = WebApplication::$request->getQueryStringParameter('limit', static::MAX_RECORDS_PER_PAGE);
+        $page           = WebApplication::$request->getQueryStringParameter('page', 1);
+        $offset         = ($page-1) * $limit;
+        $posts          = Models\Post::getAll($limit, $offset);
+        $pageTitle      = 'Show all posts';
+        if (WebApplication::$request->isAjaxRequest())
+        {
+            WebApplication::$view->renderPartial('post/_list', compact('posts', 'page'));
+
+        }
+        else
+        {
+            WebApplication::$view->render('post/list', compact('posts', 'page', 'pageTitle'));
+        }
     }
 
     public function actionShow()
     {
+        $page                   = 1;
         $post                   = static::getModelByRequest('Post');
         $pageTitle              = $post->title;
-        $comments               = Models\Comment::getByCriteria(array('postId' => $post->getPkValue()));
+        $comments               = Models\Comment::getByCriteria(array('postId' => $post->getPkValue()), static::MAX_RECORDS_PER_PAGE);
         $commentForm            = new Models\Comment();
         $commentForm->postId    = $post->getPkValue();
         $formName               = StringUtils::getNameWithoutNamespaces(get_class($commentForm));
         $token                  = CsrfUtils::getNewToken(__FUNCTION__);
         $this->handleCommentAddition($commentForm);
-        WebApplication::$view->render('post/show', compact('post', 'comments', 'commentForm', 'formName', 'token', 'pageTitle'));
+        WebApplication::$view->render('post/show', compact('post', 'comments', 'page', 'commentForm', 'formName', 'token', 'pageTitle'));
+    }
+
+    public function actionComments()
+    {
+        $postId         = WebApplication::$request->getQueryStringParameter('postId');
+        if (!isset($postId) || !is_numeric($postId))
+        {
+            static::exitWithException(new \Exception("Invalid post id supplied to load comments of.", 400));
+        }
+        $limit          = WebApplication::$request->getQueryStringParameter('limit', static::MAX_RECORDS_PER_PAGE);
+        $page           = WebApplication::$request->getQueryStringParameter('page', 1);
+        $offset         = ($page-1) * $limit;
+        $comments       = Models\Comment::getByCriteria(array('postId' => $postId), $limit, $offset);
+        if (WebApplication::$request->isAjaxRequest())
+        {
+            WebApplication::$view->renderPartial('comment/_list', compact('comments', 'page'));
+
+        }
+        else
+        {
+            //WebApplication::$view->renderPartial('comment/list', compact('comments', 'page'));
+            static::exitWithException(new \Exception('Invalid Request.', 400));
+        }
+
     }
 
     public function actionCreate()

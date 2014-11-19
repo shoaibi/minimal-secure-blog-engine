@@ -7,6 +7,8 @@ use GGS\Components\WebApplication;
 
 abstract class Controller extends ApplicationComponent
 {
+    const MAX_RECORDS_PER_PAGE      = 3;
+
     public static function getInstance(array $config)
     {
         // left here for future use cases

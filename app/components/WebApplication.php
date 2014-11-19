@@ -12,7 +12,9 @@ abstract class WebApplication extends Application
 
     public static function exitWithException(\Exception $e, $message = 'WebApplication encountered an error.')
     {
-        http_response_code(500);
+        $httpCode       = $e->getCode();
+        $httpCode       = (isset($httpCode))? $httpCode : 500;
+        http_response_code($httpCode);
         parent::exitWithException($e, $message);
     }
 
