@@ -100,7 +100,6 @@ class Post extends Controller
         {
             // ajax request? render without layout, header, etc.
             WebApplication::$view->renderPartial('comment/_list', compact('models', 'page', 'postId', 'renderNextLink'));
-
         }
         else
         {

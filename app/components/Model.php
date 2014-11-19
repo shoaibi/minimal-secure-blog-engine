@@ -214,7 +214,16 @@ abstract class Model extends Object
         $statement          = static::prepare($query);
         foreach ($bindParameters as $key => $value)
         {
-            $statement->bindValue($key, $value);
+            if (is_array($value))
+            {
+                $dataType   = (isset($value[1])) ? $value[1] : null;
+                $value      = $value[0];
+            }
+            if (!isset($dataType))
+            {
+                $dataType   = WebApplication::$database->resolvePDODatabaseTypeByValue($value);
+            }
+            $statement->bindValue($key, $value, $dataType);
         }
         if ($statement->execute())
         {

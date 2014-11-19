@@ -103,4 +103,29 @@ class Database extends ApplicationComponent
             return '"'.$name.'"';
         // add support for MSSQL
     }
+
+    /**
+     * @param $value
+     */
+    public function resolvePDODatabaseTypeByValue($value)
+    {
+        if (!is_scalar($value) && !is_null($value))
+        {
+            \GGS\Components\WebApplication::exitWithException(new \Exception('Provided value can not be mapped to PDO data type', 400));
+        }
+        $dataType   = \PDO::PARAM_STR;
+        if (is_numeric($value))
+        {
+            $dataType   = \PDO::PARAM_INT;
+        }
+        else if (is_bool($value))
+        {
+            $dataType   = \PDO::PARAM_BOOL;
+        }
+        else if (is_null($value))
+        {
+            $dataType   = \PDO::PARAM_NULL;
+        }
+        return $dataType;
+    }
 }
