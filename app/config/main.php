@@ -12,6 +12,9 @@ $config = array(
         'view'  => array(
             'path'  => APP_PATH . DIRECTORY_SEPARATOR . 'views',
         ),
+        // left here to ensure component is enabled and loaded into application so we can use Application::$request
+        // instead of namespaced class name
+        'request'   => array(),
     ),
 );
 

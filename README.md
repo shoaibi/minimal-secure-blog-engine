@@ -1,7 +1,7 @@
 # README #
 
 ## Dependencies ##
-* Webserver, PHP(5.4+), MySQL, PDO
+* Webserver, PHP(5.5+), MySQL, PDO
 * Composer
 
 ## How do I get set up? ##
@@ -23,6 +23,8 @@ composer install
 * imshoaibi @ skype
 
 ## Things i would have loved to incorporate ##
+* Dynamic input id for csrf field
+* Cron script to cleanup csrf past their expirationTime
 * Logging
 * Unit testing
 * Caching posts and comments (memory, or as serialized objects)

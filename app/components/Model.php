@@ -7,10 +7,7 @@ use \GGS\Helpers\FormUtils;
 
 abstract class Model extends Object
 {
-    /**
-     * @var int
-     */
-    public $id;
+    protected $id;
 
     protected $errors;
 
@@ -26,8 +23,17 @@ abstract class Model extends Object
 
     public static function getByPk($pk)
     {
-        $criteria   = array(static::getPkColumnName() => $pk);
-        $results    = static::getByCriteria($criteria);
+        $criteria   = array(static::getPkName() => $pk);
+        return  static::getOneByCriteria($criteria);
+    }
+
+    public static function getOneByCriteria(array $criteria = array(), $limit = null, $offset = null, $orderBy = null)
+    {
+        $results    = static::getByCriteria($criteria, $limit, $offset, $orderBy);
+        if (count($results) > 1)
+        {
+            WebApplication::exitWithException(new \Exception("More than one records found for: " . PHP_EOL . print_r($criteria, true), 400));
+        }
         return (isset($results[0]))? $results[0] : null;
     }
 
@@ -54,10 +60,10 @@ abstract class Model extends Object
 
     public static function deleteByPk($pk)
     {
-        $criteria           = array(static::getPkColumnName() => $pk);
+        $criteria           = array(static::getPkName() => $pk);
         $quotedTableName    = static::enquote(static::getTableName());
         $query              = "delete from {$quotedTableName}";
-        return static::executeQueryByCriteria($query, $criteria);
+        return boolval(static::executeQueryByCriteria($query, $criteria));
     }
 
     protected static function executeQueryByCriteria($query, array $criteria = array(), $limit = null,
@@ -128,9 +134,21 @@ abstract class Model extends Object
         return strtolower(StringUtils::getNameWithoutNamespaces(get_called_class()));
     }
 
-    protected static function getPkColumnName()
+    protected static function getPkName()
     {
         return 'id';
+    }
+
+    protected function setPkValue($value)
+    {
+        $pk           = static::getPkName();
+        $this->$pk    = $value;
+    }
+
+    public function getPkValue()
+    {
+        $pk   = static::getPkName();
+        return $this->$pk;
     }
 
     protected static function resolveColumnToPlaceholder($columnName)
@@ -140,7 +158,19 @@ abstract class Model extends Object
 
     protected static function getDefaultOrderBy()
     {
-        return static::getPkColumnName() . ' desc';
+        return static::getPkName() . ' desc';
+    }
+
+    public function __get($attribute)
+    {
+        if (property_exists($this, $attribute))
+        {
+            return $this->$attribute;
+        }
+        if ($attribute == $this->getPkName())
+        {
+            return $this->getPkValue();
+        }
     }
 
     public function resolveAttributeLabel($attribute)
@@ -160,7 +190,6 @@ abstract class Model extends Object
     {
         $validators      = array(
             'id' => array(
-                                array('sanitize'),
                                 array('type', array('type' => 'integer', 'allowEmpty' => true)),
                                 array('value', array('max' => 4294967295, 'allowEmpty' => true)),
             )
@@ -243,23 +272,21 @@ abstract class Model extends Object
     public function __toString()
     {
         $className      = StringUtils::getNameWithoutNamespaces(get_class($this));
-        $pkColumnName   = static::getPkColumnName();
-        return "{$className} #" . $this->$pkColumnName;
+        return "{$className} #" . $this->getPkValue();
     }
 
     public function delete()
     {
         $this->beforeDelete();
-        $pkColumnName   = static::getPkColumnName();
-        $deleted        = static::deleteByPk($this->$pkColumnName);
+        $deleted        = static::deleteByPk($this->getPkValue());
         $this->afterDelete($deleted);
         return $deleted;
     }
 
     public function isNew()
     {
-        $pkColumnName   = static::getPkColumnName();
-        return (empty($this->$pkColumnName));
+        $pk     = $this->getPkValue();
+        return (empty($pk));
     }
 
     public function save($validate = true)
@@ -269,25 +296,23 @@ abstract class Model extends Object
             return false;
         }
         $this->beforeSave();
-        $pkColumnName   = static::getPkColumnName();
         $saved          = ($this->isNew())? $this->create() : $this->update();
         if (!$saved)
         {
             throw new \Exception("Unable to save record");
         }
         $this->afterSave();
-        return $this->$pkColumnName;
+        return $this->getPkValue();
     }
 
     protected function create()
     {
-        $pkColumnName               = static::getPkColumnName();
         $attributes                 = static::getSavableAttributes();
         list($query, $parameters)   = static::resolveInsertQueryAndParametersByAttributes($attributes);
         $inserted                   = boolval(static::prepareBindAndExecute($query, $parameters));
         if ($inserted)
         {
-            $this->$pkColumnName    = intval(WebApplication::$database->getConnection()->lastInsertId(static::getTableName()));
+            $this->setPkValue(intval(WebApplication::$database->getConnection()->lastInsertId(static::getTableName())));
             return true;
         }
         return false;
@@ -320,12 +345,12 @@ abstract class Model extends Object
 
     protected function resolveUpdateQueryAndParametersByAttributes(array $attributes)
     {
-        $pkColumnName           = static::getPkColumnName();
-        $quotedPkColumnName     = static::enquote($pkColumnName);
-        $pkColumnPlaceholder    = static::resolveColumnToPlaceholder($pkColumnName);
+        $pk                     = static::getPkName();
+        $quotedpk               = static::enquote($pk);
+        $pkColumnPlaceholder    = static::resolveColumnToPlaceholder($pk);
         $quotedTableName        = static::enquote(static::getTableName());
-        $query                  = "UPDATE {$quotedTableName} SET updatesList where {$quotedPkColumnName} = ${pkColumnPlaceholder}";
-        $parameters             = array($pkColumnPlaceholder    => $this->$pkColumnName);
+        $query                  = "UPDATE {$quotedTableName} SET updatesList where {$quotedpk} = ${pkColumnPlaceholder}";
+        $parameters             = array($pkColumnPlaceholder    => $this->getPkValue());
         $updatesList            = array();
         foreach ($attributes as $columnName => $value)
         {
@@ -342,7 +367,7 @@ abstract class Model extends Object
     {
         $attributes = get_object_vars($this);
         unset($attributes['errors']);
-        unset($attributes[static::getPkColumnName()]);
+        unset($attributes[static::getPkName()]);
         return $attributes;
     }
 

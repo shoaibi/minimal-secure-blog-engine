@@ -7,6 +7,8 @@ class ValueValidator extends AllowEmptyValidator
 
     public $max     = null;
 
+    public $exact   = null;
+
     public function validate(\GGS\Components\Model & $object, $attribute)
     {
         if (!parent::validate($object, $attribute))
@@ -16,7 +18,15 @@ class ValueValidator extends AllowEmptyValidator
         $valid              = false;
         $errorMessagePrefix = $this->resolveErrorMessagePrefix();
         $comparisonValue    = $this->resolveComparisonValue($object, $attribute);
-        if (isset($this->min, $this->max))
+        if (isset($this->exact))
+        {
+            $valid = ($comparisonValue == $this->exact);
+            if (!$valid)
+            {
+                $this->setError($object, $attribute, $errorMessagePrefix . 'must be ' . $this->exact);
+            }
+        }
+        else if (isset($this->min, $this->max))
         {
             $valid = ($comparisonValue > $this->min && $comparisonValue < $this->max);
             if (!$valid)

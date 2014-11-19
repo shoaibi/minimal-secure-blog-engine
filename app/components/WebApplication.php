@@ -40,7 +40,7 @@ abstract class WebApplication extends Application
 
     protected static function ensureRouteIsProvided()
     {
-        $route  = \GGS\Components\Controller::getRouteFromQueryString();
+        $route  = static::$request->getRouteFromQueryString();
         if (empty($route))
         {
             static::exitWithException(new \Exception('Bad Request: No route specified', 400));

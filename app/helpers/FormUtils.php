@@ -54,11 +54,14 @@ abstract class FormUtils
         return $content;
     }
 
-    public static function renderSpamCheckInput($inputType = 'text')
+    public static function renderSpamCheckInput($inputType = 'text', $inputValue = null)
     {
-        $inputName          = static::SPAM_CHECK_INPUT_NAME;
+        return static::renderAntiSpamInput(static::SPAM_CHECK_INPUT_NAME, $inputType, $inputValue);
+    }
+
+    public static function renderAntiSpamInput($inputName, $inputType = 'text', $inputValue = null)
+    {
         $inputId            = $inputName;
-        $inputValue         = null;
         $errorMessageId     = '_error';
         $label              = null;
         $errorMessageStyle  = 'display:none';

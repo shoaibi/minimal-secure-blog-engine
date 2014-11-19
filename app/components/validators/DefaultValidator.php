@@ -7,7 +7,7 @@ class DefaultValidator extends Validator
 
     public function validate(\GGS\Components\Model & $object, $attribute)
     {
-        if (isset($this->value) && !isset($object->$attribute))
+        if (isset($this->value) && empty($object->$attribute))
         {
             $object->$attribute = $this->value;
         }

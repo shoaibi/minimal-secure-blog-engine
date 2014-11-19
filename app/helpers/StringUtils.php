@@ -33,4 +33,27 @@ abstract class StringUtils
         return $value;
     }
 
+    /**
+     * Generate a random string
+     * @param int $length
+     * @param null $characterSet
+     * @return string
+     */
+    public static function generateRandomString($length = 10, $characterSet = null)
+    {
+        if (empty($characterSet))
+        {
+            $characterSet = implode(range("A", "Z")) . implode(range("a", "z")) . implode(range("0", "9"));
+        }
+        $characterSetLength = strlen($characterSet);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++)
+        {
+            $randomCharacter    = $characterSet[rand(0, $characterSetLength - 1)];
+            $randomString       .= $randomCharacter;
+        }
+        return $randomString;
+    }
+
+
 }

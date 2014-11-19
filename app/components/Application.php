@@ -29,6 +29,11 @@ abstract class Application extends Object
     public static $view = null;
 
     /**
+     * @var null
+     */
+    public static $request = null;
+
+    /**
      * @param array $config
      */
     public static function run(array $config = array())

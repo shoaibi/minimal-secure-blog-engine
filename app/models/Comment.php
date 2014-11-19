@@ -38,7 +38,7 @@ class Comment extends Model
                                 array('required'),
                                 array('sanitize'),
                                 array('type', array('type' => 'string')),
-                                array('length', array('min' => 5, 'max' => 50)),
+                                array('length', array('min' => 2, 'max' => 50)),
             ),
 
             'email' => array(

@@ -5,7 +5,7 @@ $attributeToInputTypeMapping    = array(
             'email'     => 'email',
             'message'   => 'textarea'
             );
-\GGS\Components\WebApplication::$view->renderPartial('common/_form', compact('model', 'formName', 'attributeToInputTypeMapping'));
+\GGS\Components\WebApplication::$view->renderPartial('common/_form', compact('model', 'formName', 'token', 'attributeToInputTypeMapping'));
 ?>
 
 <script type="text/javascript">
@@ -31,16 +31,13 @@ $attributeToInputTypeMapping    = array(
 
                                 if (data.status == 'success')
                                 {
-                                    $(form).trigger("reset");
+                                    //$(form).trigger("reset");
+                                    $(form).parent().html('');
                                 }
                                 if (data.status == 'error' && 'errors' in data)
                                 {
-                                    //console.log(data.errors);
-
                                     for (var attributeName in data.errors) {
                                         if (data.errors.hasOwnProperty(attributeName)) {
-                                            console.log(attributeName);
-                                            console.log(data.errors[attributeName]);
                                             $('#' + attributeName).siblings('.errorMessage').text(data.errors[attributeName]).css('display', '');
                                         }
                                     }

@@ -15,7 +15,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-
 --
 -- Table structure for table `comment`
 --
@@ -47,6 +46,35 @@ LOCK TABLES `comment` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `csrf`
+--
+
+DROP TABLE IF EXISTS `csrf`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `csrf` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `key` char(64) COLLATE utf8_unicode_ci NOT NULL,
+  `action` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `userAgent` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `userIP` int(11) NOT NULL,
+  `expirationTime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `key` (`key`),
+  KEY `action` (`action`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `csrf`
+--
+
+LOCK TABLES `csrf` WRITE;
+/*!40000 ALTER TABLE `csrf` DISABLE KEYS */;
+/*!40000 ALTER TABLE `csrf` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `post`
 --
 
@@ -61,7 +89,7 @@ CREATE TABLE `post` (
   PRIMARY KEY (`id`),
   KEY `email` (`email`),
   KEY `title` (`title`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -82,4 +110,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-18 13:19:30
+-- Dump completed on 2014-11-19 11:44:37

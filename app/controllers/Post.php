@@ -2,6 +2,7 @@
 namespace GGS\Controllers;
 use GGS\Components\WebApplication;
 use GGS\Components\Controller;
+use GGS\Helpers\CsrfUtils;
 use GGS\Helpers\FormUtils;
 use GGS\Helpers\StringUtils;
 use GGS\Models;
@@ -19,39 +20,42 @@ class Post extends Controller
     {
         $post                   = static::getModelByRequest('Post');
         $pageTitle              = $post->title;
-        $comments               = Models\Comment::getByCriteria(array('postId' => $post->id));
+        $comments               = Models\Comment::getByCriteria(array('postId' => $post->getPkValue()));
         $commentForm            = new Models\Comment();
-        $commentForm->postId    = $post->id;
+        $commentForm->postId    = $post->getPkValue();
         $formName               = StringUtils::getNameWithoutNamespaces(get_class($commentForm));
+        $token                  = CsrfUtils::getNewToken(__FUNCTION__);
         $this->handleCommentAddition($commentForm);
-        WebApplication::$view->render('post/show', compact('post', 'comments', 'commentForm', 'formName', 'pageTitle'));
+        WebApplication::$view->render('post/show', compact('post', 'comments', 'commentForm', 'formName', 'token', 'pageTitle'));
     }
 
     public function actionCreate()
     {
         $post           = new Models\Post();
         $pageTitle      = 'Add Post';
-        $this->_renderPostEdit($post, $pageTitle);
+        $token          = CsrfUtils::getNewToken(__FUNCTION__);
+        $this->_renderPostEdit($post, $pageTitle, $token);
     }
 
     public function actionEdit()
     {
         $model          = static::getModelByRequest('Post');
         $pageTitle      = 'Edit Post';
-        $this->_renderPostEdit($model, $pageTitle);
+        $token          = CsrfUtils::getNewToken(__FUNCTION__);
+        $this->_renderPostEdit($model, $pageTitle, $token);
     }
 
-    public function _renderPostEdit(\GGS\Models\Post $model, $pageTitle)
+    public function _renderPostEdit(\GGS\Models\Post $model, $pageTitle, $token)
     {
         $formName       = StringUtils::getNameWithoutNamespaces(get_class($model));
-        if (static::isPostRequest() && $attributes = static::getPostParameter($formName))
+        if (WebApplication::$request->isPostRequest() && $attributes = WebApplication::$request->getPostParameter($formName))
         {
             $model->setAttributes($attributes);
             if ($model->validate())
             {
-                if ($id = $model->save())
+                if ($pk = $model->save())
                 {
-                    $redirectUrl = static::createUrl('post', 'show', array('id' => $id));
+                    $redirectUrl = static::createUrl('post', 'show', array('id' => $pk));
                     static::redirect($redirectUrl);
                 }
                 else
@@ -60,13 +64,14 @@ class Post extends Controller
                 }
             }
         }
-        WebApplication::$view->render('post/create', compact('model', 'formName', 'pageTitle'));
+        WebApplication::$view->render('post/create', compact('model', 'formName', 'token', 'pageTitle'));
     }
 
     protected function handleCommentAddition(\GGS\Models\Comment $commentForm)
     {
         $formName       = StringUtils::getNameWithoutNamespaces(get_class($commentForm));
-        if (static::isAjaxRequest() && static::isPostRequest() && $attributes = static::getPostParameter($formName))
+        if (WebApplication::$request->isAjaxRequest() && WebApplication::$request->isPostRequest() &&
+                $attributes = WebApplication::$request->getPostParameter($formName))
         {
             $response       = array();
             $commentForm->setAttributes($attributes);
@@ -74,9 +79,9 @@ class Post extends Controller
             {
                 $response['status']     = 'success';
                 $response['message']    = 'Comment successfully added.';
-                if ($id = $commentForm->save())
+                if ($pk = $commentForm->save())
                 {
-                    $response['id'] = $id;
+                    $response['id'] = $pk;
 
                 }
                 else
