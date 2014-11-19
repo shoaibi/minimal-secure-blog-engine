@@ -31,12 +31,12 @@ composer install
 * Pages support infinite scrolling. Scrolling to page's end will load any previous data. This is true for both, posts and comments.
 * Pages support auto-loading the new content(at 10 second interval by default). This is true for both, posts and comments.
 * Security Features:
-** Strict Validation (XSS, SQL Injection, Remote Code Injection, Command Injection)
-** PDO statements with parameter binding (SQL Injection)
-** Checking Referrer for Post Requests (Spoofed Forms)
-** Honey Pot input for forms (Bot submissions)
-** CSRF Protection for forms (Spoofed forms with CSRF)
-** Session isn't used so Session Fixation and Hijacking attacks are avoided.
+    * Strict Validation (XSS, SQL Injection, Remote Code Injection, Command Injection)
+    * PDO statements with parameter binding (SQL Injection)
+    * Checking Referrer for Post Requests (Spoofed Forms)
+    * Honey Pot input for forms (Bot submissions)
+    * CSRF Protection for forms (Spoofed forms with CSRF)
+    * Session isn't used so Session Fixation and Hijacking attacks are avoided.
 
 
 ## Missing Features ##
