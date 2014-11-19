@@ -214,9 +214,11 @@ abstract class Model extends Object
         $statement          = static::prepare($query);
         foreach ($bindParameters as $key => $value)
         {
+            // reset data type at the start of iteration.
+            $dataType       = null;
             if (is_array($value))
             {
-                $dataType   = (isset($value[1])) ? $value[1] : null;
+                $dataType   = (isset($value[1])) ? $value[1] : $dataType;
                 $value      = $value[0];
             }
             if (!isset($dataType))

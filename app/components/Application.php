@@ -118,7 +118,7 @@ abstract class Application extends Object
         {
             $message    .= PHP_EOL . 'Error: ' . PHP_EOL . $e->getMessage();
         }
-        die($message);
+        die(nl2br($message));
     }
 
     /**

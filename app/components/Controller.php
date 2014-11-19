@@ -125,7 +125,7 @@ abstract class Controller extends ApplicationComponent
         if (!$isCsrfTokenValid)
         {
             // nope? Come on, not you again.
-            static::exitWithEatSpamException('CSRF validation Failed');
+            static::exitWithEatSpamException('CSRF validation Failed.');
         }
     }
 

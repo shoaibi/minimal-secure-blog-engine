@@ -141,7 +141,7 @@ class Csrf extends Model
      */
     public static function encodeIpForDatabase($ip)
     {
-        return (isset($ip)) ? sprintf("%u", ip2long($ip)) : $ip;
+        return (isset($ip)) ? intval(sprintf("%u", ip2long($ip))) : $ip;
     }
 
     /**
@@ -201,21 +201,6 @@ class Csrf extends Model
             // perhaps the key's record was expired and deleted(not implemented)
             return false;
         }
-
-        var_dump(get_defined_vars());
-        var_dump('Current Time:');
-        var_dump(time());
-        var_dump('is time less than expiration?');
-        var_dump(time() < $record->expirationTime);
-        var_dump('$record->action == $action');
-        var_dump($record->action == $action);
-        var_dump('$record->userAgent == $userAgent');
-        var_dump($record->userAgent == $userAgent);
-        var_dump('$record->hasSameIpAs($userIP)');
-        var_dump($record->hasSameIpAs($userIP));
-        var_dump('encoded ip');
-        var_dump(static::encodeIpForDatabase($userIP));
-
         // ensure csrf has not expired and has same attributes as the one in this request
         return (time() < $record->expirationTime && $record->action == $action && $record->userAgent == $userAgent
                     && $record->hasSameIpAs($userIP));
