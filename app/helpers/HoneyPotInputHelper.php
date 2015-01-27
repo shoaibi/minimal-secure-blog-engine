@@ -44,7 +44,7 @@ abstract class HoneyPotInputHelper
             return ($fieldValue !== '');
         }
         // not post request? cool.
-        return true;
+        return false;
     }
 }
 ?>
