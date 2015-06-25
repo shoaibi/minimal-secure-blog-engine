@@ -1,7 +1,7 @@
 # README #
 
 ## What is this? ##
-A minimalistic blog system focusing on security. Check Features below for details on what can be done.
+A minimalistic blog system focusing on security done as an exercise on a Saturday night. Check Features below for details on what can be done.
 
 ## How was it done? ##
 * For the PHP/MySQL part I brewed a custom MVC character by character myself. It is very minimal and light.
