@@ -1,13 +1,12 @@
 # README #
 
 ## What is this? ##
-Implementation of Good Game Studios' Backend Task 01.
+A minimalistic blog system focusing on security. Check Features below for details on what can be done.
 
 ## How was it done? ##
-For the PHP/MySQL part I brewed a custom MVC character by character myself. It is very minimal and light.
-For the UI/JS: I opted to use JQuery as the purpose of the task was to test backend skills and I didn't want to indulge in
-cross browser JS issues.
-For the UI/CSS: I compiled a very minimal style.css
+* For the PHP/MySQL part I brewed a custom MVC character by character myself. It is very minimal and light.
+* For the UI/JS: I opted to use JQuery as the purpose of the task was to test backend skills and I didn't want to indulge in cross browser JS issues.
+* For the UI/CSS: I compiled a very minimal style.css
 
 ## Dependencies ##
 * Webserver, PHP(5.5+), MySQL, PDO, JQuery v1.4+(bundled)
@@ -55,11 +54,6 @@ composer install
 * User Management
 * Rights Management
 * Comment and Post Moderation
-
-## Who do I talk to? ##
-* Repo owner or admin
-* shoaibi@dotgeek.me
-* imshoaibi @ skype
 
 ## License ##
 Code is provided as is with no liability and terms whatsoever. It may turn your toaster to zombie, it may trigger doomsday device. Try at your own risk.
